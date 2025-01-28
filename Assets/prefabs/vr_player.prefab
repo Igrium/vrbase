@@ -81,71 +81,6 @@
             "TrackingType": "All",
             "UseRelativeTransform": false
           }
-        ],
-        "Children": [
-          {
-            "__guid": "1684841e-6e92-4a10-afa3-158445c09350",
-            "Flags": 0,
-            "Name": "LeftHandModel",
-            "Enabled": true,
-            "Components": [
-              {
-                "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "7d61472c-f57c-4f1a-8db2-743cc4da7a91",
-                "AnimationGraph": null,
-                "BodyGroups": 18446744073709551615,
-                "BoneMergeTarget": null,
-                "CreateAttachments": false,
-                "CreateBoneObjects": false,
-                "MaterialGroup": null,
-                "MaterialOverride": null,
-                "Model": "models/vr_hand_left.vmdl",
-                "Morphs": {},
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "Parameters": {
-                  "bools": {},
-                  "ints": {},
-                  "floats": {},
-                  "vectors": {},
-                  "rotations": {}
-                },
-                "RenderOptions": {
-                  "GameLayer": true,
-                  "OverlayLayer": false,
-                  "BloomLayer": false,
-                  "AfterUILayer": false
-                },
-                "RenderType": "On",
-                "Sequence": {
-                  "Name": null
-                },
-                "Tint": "1,1,1,1",
-                "UseAnimGraph": true
-              },
-              {
-                "__type": "VRBase.VRHandAnimationController",
-                "__guid": "eb675f54-7432-4a23-92b5-aa4600185959",
-                "HandSide": "Left",
-                "Model": {
-                  "_type": "component",
-                  "component_id": "7d61472c-f57c-4f1a-8db2-743cc4da7a91",
-                  "go": "1684841e-6e92-4a10-afa3-158445c09350",
-                  "component_type": "SkinnedModelRenderer"
-                },
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null
-              }
-            ]
-          }
         ]
       },
       {
@@ -232,16 +167,21 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
+            "posKd": 400,
+            "posKp": 4000,
             "Rigidbody": {
               "_type": "component",
               "component_id": "f27f1d49-9e4c-45f5-8929-fb9497e82a03",
               "go": "92f08d15-3dcb-4f1e-a39d-8808fbdf34f7",
               "component_type": "Rigidbody"
             },
+            "rotKd": 100000,
+            "rotKp": 600000,
             "TrackingHand": {
               "_type": "gameobject",
               "go": "4ac89704-18c2-4f65-9a2a-9df311198261"
-            }
+            },
+            "UseRealForce": true
           },
           {
             "__type": "Sandbox.SkinnedModelRenderer",
@@ -281,71 +221,124 @@
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
           }
-        ],
-        "Children": [
+        ]
+      },
+      {
+        "__guid": "a4390b44-2b71-4f25-a9d2-44f140d7e0b1",
+        "Flags": 0,
+        "Name": "LeftPhysicsHand",
+        "Enabled": true,
+        "Components": [
           {
-            "__guid": "5223c054-42eb-4544-ab6e-08994d30554e",
-            "Flags": 0,
-            "Name": "RightHandModel",
-            "Enabled": true,
-            "Components": [
-              {
-                "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "652fd65e-36a5-45a5-b602-800297d909fa",
-                "__enabled": false,
-                "AnimationGraph": null,
-                "BodyGroups": 18446744073709551615,
-                "BoneMergeTarget": null,
-                "CreateAttachments": false,
-                "CreateBoneObjects": false,
-                "MaterialGroup": null,
-                "MaterialOverride": null,
-                "Model": "models/vr_hand_right.vmdl",
-                "Morphs": {},
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "Parameters": {
-                  "bools": {},
-                  "ints": {},
-                  "floats": {},
-                  "vectors": {},
-                  "rotations": {}
-                },
-                "RenderOptions": {
-                  "GameLayer": true,
-                  "OverlayLayer": false,
-                  "BloomLayer": false,
-                  "AfterUILayer": false
-                },
-                "RenderType": "On",
-                "Sequence": {
-                  "Name": null
-                },
-                "Tint": "1,1,1,1",
-                "UseAnimGraph": true
-              },
-              {
-                "__type": "VRBase.VRHandAnimationController",
-                "__guid": "212580f3-f98b-4561-a117-39b6c17b0c2f",
-                "HandSide": "Right",
-                "Model": {
-                  "_type": "component",
-                  "component_id": "652fd65e-36a5-45a5-b602-800297d909fa",
-                  "go": "5223c054-42eb-4544-ab6e-08994d30554e",
-                  "component_type": "SkinnedModelRenderer"
-                },
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null
-              }
-            ]
+            "__type": "Sandbox.Rigidbody",
+            "__guid": "fce5e1a8-3b8d-42d0-8e20-0a1da80cbcc8",
+            "AngularDamping": 0,
+            "Gravity": true,
+            "LinearDamping": 0,
+            "Locking": {
+              "X": false,
+              "Y": false,
+              "Z": false,
+              "Pitch": false,
+              "Yaw": false,
+              "Roll": false
+            },
+            "MassCenterOverride": "0,0,0",
+            "MassOverride": 0,
+            "MotionEnabled": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OverrideMassCenter": false,
+            "RigidbodyFlags": 0,
+            "StartAsleep": false
+          },
+          {
+            "__type": "Sandbox.SphereCollider",
+            "__guid": "b11e28bb-6843-4786-bbc4-3c894eaaa328",
+            "Center": "0,0,0",
+            "Friction": null,
+            "IsTrigger": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "Radius": 3,
+            "Static": false,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "VRBase.VRPhysicsHand",
+            "__guid": "2c0fcd4b-a5fe-4215-bc5b-4e3b405f5615",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "posKd": 400,
+            "posKp": 4000,
+            "Rigidbody": {
+              "_type": "component",
+              "component_id": "fce5e1a8-3b8d-42d0-8e20-0a1da80cbcc8",
+              "go": "a4390b44-2b71-4f25-a9d2-44f140d7e0b1",
+              "component_type": "Rigidbody"
+            },
+            "rotKd": 100000,
+            "rotKp": 600000,
+            "TrackingHand": {
+              "_type": "gameobject",
+              "go": "c20f2009-23ae-4b6d-9030-4880130b0523"
+            },
+            "UseRealForce": true
+          },
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "4b513214-3d1b-458a-b47d-c9756f81ff00",
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Model": "models/vr_hand_left.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
           }
         ]
       }
