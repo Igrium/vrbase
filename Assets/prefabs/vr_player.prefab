@@ -50,7 +50,7 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "Orthographic": true,
+            "Orthographic": false,
             "OrthographicHeight": 1204,
             "Priority": 1,
             "RenderExcludeTags": "",
@@ -167,6 +167,120 @@
             "TrackingType": "All",
             "UseRelativeTransform": false
           }
+        ]
+      },
+      {
+        "__guid": "92f08d15-3dcb-4f1e-a39d-8808fbdf34f7",
+        "Flags": 0,
+        "Name": "RightPhysicsHand",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "Sandbox.Rigidbody",
+            "__guid": "f27f1d49-9e4c-45f5-8929-fb9497e82a03",
+            "AngularDamping": 0,
+            "Gravity": true,
+            "LinearDamping": 0,
+            "Locking": {
+              "X": false,
+              "Y": false,
+              "Z": false,
+              "Pitch": false,
+              "Yaw": false,
+              "Roll": false
+            },
+            "MassCenterOverride": "0,0,0",
+            "MassOverride": 0,
+            "MotionEnabled": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OverrideMassCenter": false,
+            "RigidbodyFlags": 0,
+            "StartAsleep": false
+          },
+          {
+            "__type": "Sandbox.SphereCollider",
+            "__guid": "d8db7d4a-23a1-4d1e-8435-0a128967098e",
+            "Center": "0,0,0",
+            "Friction": null,
+            "IsTrigger": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "Radius": 3,
+            "Static": false,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "VRBase.VRPhysicsHand",
+            "__guid": "d6e6b8e1-1bd4-4756-9efa-ba822119a6d9",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Rigidbody": {
+              "_type": "component",
+              "component_id": "f27f1d49-9e4c-45f5-8929-fb9497e82a03",
+              "go": "92f08d15-3dcb-4f1e-a39d-8808fbdf34f7",
+              "component_type": "Rigidbody"
+            },
+            "TrackingHand": {
+              "_type": "gameobject",
+              "go": "4ac89704-18c2-4f65-9a2a-9df311198261"
+            }
+          },
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "88a29c81-cab3-4781-bbb7-79ebc5b3eb07",
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Model": "models/vr_hand_right.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
         ],
         "Children": [
           {
@@ -178,6 +292,7 @@
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
                 "__guid": "652fd65e-36a5-45a5-b602-800297d909fa",
+                "__enabled": false,
                 "AnimationGraph": null,
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,

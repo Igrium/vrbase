@@ -29,7 +29,7 @@
       "NoWarn": "1701;1702;1591;",
       "WarningsAsErrors": "",
       "TreatWarningsAsErrors": false,
-      "Nullables": false,
+      "Nullables": true,
       "Whitelist": true,
       "ReleaseMode": "Debug",
       "AssemblyReferences": [],

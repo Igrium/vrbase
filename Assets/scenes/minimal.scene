@@ -31,7 +31,7 @@
       "__guid": "dd5f5435-2b59-438b-9700-1d4689e21cb5",
       "Flags": 0,
       "Name": "vr_player",
-      "Position": "-205.9329,183.2548,-26",
+      "Position": "-68.95575,183.2548,-21.38031",
       "Enabled": true,
       "NetworkMode": 1,
       "__Prefab": "prefabs/vr_player.prefab",
