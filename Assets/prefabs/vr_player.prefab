@@ -341,6 +341,56 @@
             "UseAnimGraph": true
           }
         ]
+      },
+      {
+        "__guid": "276dd9e5-aeb7-4f5f-89e2-0dfcd9ff971c",
+        "Flags": 0,
+        "Name": "PlayerCapsule",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "Sandbox.CapsuleCollider",
+            "__guid": "69bf20f7-82a1-44d0-9ef8-ccaa0bbab84d",
+            "End": "0,0,64",
+            "Friction": null,
+            "IsTrigger": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "Radius": 16,
+            "Start": "0,0,16",
+            "Static": false,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "VRBase.VRPlayerCollider",
+            "__guid": "3d5a8920-1821-46af-b890-88597453f147",
+            "Collider": {
+              "_type": "component",
+              "component_id": "69bf20f7-82a1-44d0-9ef8-ccaa0bbab84d",
+              "go": "276dd9e5-aeb7-4f5f-89e2-0dfcd9ff971c",
+              "component_type": "CapsuleCollider"
+            },
+            "HMD": {
+              "_type": "gameobject",
+              "go": "b1d71e23-ddea-42a9-8ad7-ae673520495e"
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ]
       }
     ],
     "__variables": [],
