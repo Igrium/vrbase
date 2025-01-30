@@ -17,11 +17,13 @@ public sealed class VRPlayerCollider : Component
 		{
 			// Move the collider
 			Vector3 targetPos = HMD.WorldPosition;
+			Vector3 localTarget = HMD.LocalPosition;
 			targetPos.z = Collider.WorldPosition.z;
 
 			Collider.WorldPosition = targetPos;
 
-			Collider.End = new Vector3(0, 0, targetPos.z);
+			Log.Info("ssss " + localTarget);
+			Collider.End = new Vector3(0, 0, localTarget.z);
 
 			if (!Collider.Touching.Any())
 			{
