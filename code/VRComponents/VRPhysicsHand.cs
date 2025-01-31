@@ -8,10 +8,12 @@ namespace VRBase;
 public sealed class VRPhysicsHand : Component
 {
 	[Property]
-	public GameObject? TrackingHand { get; private set; }
+	public GameObject? TrackingHand { get; set; }
 
 	[Property, RequireComponent]
-	public Rigidbody? Rigidbody { get; private set; }
+	public Rigidbody? Rigidbody { get; set; }
+
+	public VRCharacterController? Controller => GameObject.GetComponentInParent<VRCharacterController?>();
 
 	[Property]
 	public float posKp { get; set; } = 4000f;
@@ -34,8 +36,6 @@ public sealed class VRPhysicsHand : Component
 	private Vector3 prevRotDifference = Vector3.Zero;
 	private Vector3 prevPosDifference = Vector3.Zero;
 
-	public VRTrackedHand? TrackingHandComponent { get => TrackingHand?.GetComponent<VRTrackedHand>(); }
-
 
 	//protected override void OnUpdate()
 	//{
@@ -50,18 +50,48 @@ public sealed class VRPhysicsHand : Component
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
+
 		if ( Rigidbody.IsValid() && TrackingHand.IsValid() )
 		{
-			Vector3 force = PositionPD( GameObject.WorldPosition, TrackingHand.WorldPosition );
-			//force = force.ClampLength( 1000f );
-			Rigidbody.PhysicsBody.ApplyForce( force );
+			VRCharacterController? controller = Controller;
+			if (controller.IsValid() && controller.IsMoving)
+			{
+				Rigidbody.WorldPosition = GetProjectedTransform();
+				Rigidbody.WorldRotation = TrackingHand.WorldRotation;
 
-			Vector3 torque = RotationPD( GameObject.WorldRotation, TrackingHand.WorldRotation );
-			//torque.ClampLength( rotMagnitudeClamp );
-			Rigidbody.PhysicsBody.ApplyTorque( torque );
+				Rigidbody.Velocity = Vector3.Zero;
+				Rigidbody.AngularVelocity = Vector3.Zero;
+			}
+			else
+			{
+				Vector3 force = PositionPD( GameObject.WorldPosition, TrackingHand.WorldPosition );
+				//force = force.ClampLength( 1000f );
+				Rigidbody.PhysicsBody.ApplyForce( force );
+
+				Vector3 torque = RotationPD( GameObject.WorldRotation, TrackingHand.WorldRotation );
+				//torque.ClampLength( rotMagnitudeClamp );
+				Rigidbody.PhysicsBody.ApplyTorque( torque );
+			}
+
 		}
-		
 	}
+
+	private Vector3 GetProjectedTransform()
+	{
+		VRCharacterController? controller = Controller;
+		GameObject? HMD = controller?.HMD;
+		if ( controller == null || HMD == null || TrackingHand == null )
+		{
+			return WorldPosition;
+		}
+
+		Vector3 from = HMD.WorldPosition;
+		Vector3 to = TrackingHand.WorldPosition;
+
+		var res = Scene.Trace.Ray(from, to).Radius(3f).IgnoreGameObjectHierarchy(GameObject.Parent).Run();
+		return res.EndPosition;
+	}
+
 
 	private Vector3 PositionPD(Vector3 currentPos, Vector3 targetPos)
 	{

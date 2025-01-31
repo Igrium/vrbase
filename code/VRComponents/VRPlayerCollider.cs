@@ -13,7 +13,7 @@ public sealed class VRPlayerCollider : Component
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-		if (Collider != null && HMD != null)
+		if ( Collider != null && HMD != null )
 		{
 			// Move the collider
 			Vector3 targetPos = HMD.WorldPosition;
@@ -22,14 +22,14 @@ public sealed class VRPlayerCollider : Component
 
 			Collider.WorldPosition = targetPos;
 
-			Collider.End = new Vector3(0, 0, localTarget.z);
+			Collider.End = new Vector3( 0, 0, localTarget.z );
 
-			if (!Collider.Touching.Any())
+			if ( !Collider.Touching.Any() )
 			{
 				LastValidWorldPos = Collider.WorldPosition;
 			}
 			//Collider.g
 		}
-		
+
 	}
 }

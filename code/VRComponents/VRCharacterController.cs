@@ -82,6 +82,10 @@ public class VRCharacterController : Component
 	[Sync]
 	public Vector3 Velocity { get; set; }
 
+	/// <summary>
+	/// Whether the VR character fake-moved this frame.
+	/// </summary>
+	public bool IsMoving { get; private set; }
 
 	/// <summary>
 	/// Whether the character is currently falling using fake movement.
@@ -107,7 +111,7 @@ public class VRCharacterController : Component
 
 	protected override void OnUpdate()
 	{
-		//if ( IsProxy ) return;
+		IsMoving = false;
 
 		Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
 		//Vector3 input = Input.AnalogMove;
@@ -133,6 +137,7 @@ public class VRCharacterController : Component
 
 				Velocity = (rotInput * 100).WithZ(Velocity.z);
 				Move( true );
+				IsMoving = true;
 			}
 
 		}
@@ -164,11 +169,8 @@ public class VRCharacterController : Component
 			SceneTraceResult trace = BuildTrace(pos, pos - Vector3.Down * fallAmount).Run();
 
 			WorldFeetPos = trace.EndPosition;
-			
-			if (trace.Hit)
-			{
-				IsFalling = false;
-			}
+
+			IsMoving = true;
 		}
 
 		// POS VALIATION
