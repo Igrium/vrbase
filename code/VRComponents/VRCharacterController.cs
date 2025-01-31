@@ -344,10 +344,10 @@ public class VRCharacterController : Component
 			return false;
 		}
 
-		int num = 20;
+		int num = 10;
 		for (int i = 0; i < num; i++)
 		{
-			Vector3 vec = WorldFeetPos + Vector3.Random.Normal * (_stuckTries / 2f);
+			Vector3 vec = WorldFeetPos + Vector3.Random.Normal * (_stuckTries / 12f);
 			if (i == 0)
 			{
 				vec = WorldFeetPos + Vector3.Up * 2f;

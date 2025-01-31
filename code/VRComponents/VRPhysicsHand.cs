@@ -86,6 +86,7 @@ public sealed class VRPhysicsHand : Component
 		}
 
 		Vector3 from = HMD.WorldPosition;
+		from.z -= 12;
 		Vector3 to = TrackingHand.WorldPosition;
 
 		var res = Scene.Trace.Ray(from, to).Radius(3f).IgnoreGameObjectHierarchy(GameObject.Parent).Run();
