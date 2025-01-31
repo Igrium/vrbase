@@ -19,8 +19,9 @@ public sealed class VRTrackedHand : Component
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-		if ( PhysicsParent.IsValid() ) {
+		if ( PhysicsParent.IsValid() )
+		{
 			PhysicsParent.Transform = GameObject.Transform.World;
-			}
+		}
 	}
 }

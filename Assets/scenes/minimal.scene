@@ -28,16 +28,6 @@
       "Children": []
     },
     {
-      "__guid": "0eba3eec-d8bb-4d1d-81fd-2a574efc5129",
-      "Flags": 0,
-      "Name": "vr_player",
-      "Position": "-67.45771,199.8029,-22",
-      "Enabled": true,
-      "NetworkMode": 1,
-      "__Prefab": "prefabs/vr_player.prefab",
-      "__PrefabVariables": {}
-    },
-    {
       "__guid": "025e9f4e-6c9c-49ba-b08e-b8a67ee08921",
       "Flags": 0,
       "Name": "Cube",
@@ -279,6 +269,44 @@
           "SurfaceVelocity": "0,0,0"
         }
       ]
+    },
+    {
+      "__guid": "3228b48a-e9ca-484e-a95e-7f55d5d8670d",
+      "Flags": 0,
+      "Name": "rollermine",
+      "Position": "-69.08139,116.2072,-12.13151",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "e766b739-d7f8-42c3-8c0e-642018358e33",
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": false,
+          "MaterialGroup": null,
+          "Model": "models/rollermine.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        }
+      ]
+    },
+    {
+      "__guid": "11296477-a1cd-46f6-804c-1a08fe33de7d",
+      "Flags": 0,
+      "Name": "vr_player",
+      "Position": "-35.23833,-20.90569,-22",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "__Prefab": "prefabs/vr_player.prefab",
+      "__PrefabVariables": {}
     }
   ],
   "SceneProperties": {
@@ -307,6 +335,8 @@
   "ResourceVersion": 2,
   "Title": null,
   "Description": null,
-  "__references": [],
+  "__references": [
+    "igrium.rollermine-model#19481"
+  ],
   "__version": 2
 }

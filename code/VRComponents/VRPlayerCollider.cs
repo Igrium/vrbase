@@ -22,7 +22,6 @@ public sealed class VRPlayerCollider : Component
 
 			Collider.WorldPosition = targetPos;
 
-			Log.Info("ssss " + localTarget);
 			Collider.End = new Vector3(0, 0, localTarget.z);
 
 			if (!Collider.Touching.Any())
