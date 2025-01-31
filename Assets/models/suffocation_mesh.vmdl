@@ -37,7 +37,7 @@
 						[
 							{
 								from = "default.vmat"
-								to = "dev/helper/testgrid.vmat"
+								to = "models/suffocation_mesh.vmat"
 							},
 						]
 						use_global_default = false

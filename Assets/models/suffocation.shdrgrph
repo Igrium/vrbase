@@ -1,0 +1,340 @@
+{
+  "Model": "models/suffocation_mesh.vmdl",
+  "Description": "The sphere shown around the player\u0027s head when they suffocate.",
+  "BlendMode": "Translucent",
+  "ShadingModel": "Unlit",
+  "Domain": "Surface",
+  "PreviewSettings": {
+    "ShowSkybox": true,
+    "BackgroundColor": "0,0,0,1",
+    "Tint": "1,1,1,1"
+  },
+  "nodes": [
+    {
+      "_class": "Result",
+      "DefaultOpacity": 1,
+      "DefaultRoughness": 1,
+      "DefaultMetalness": 0,
+      "DefaultAmbientOcclusion": 1,
+      "Identifier": "0",
+      "Position": "540,60",
+      "HandleOffsets": {},
+      "Albedo": {
+        "Identifier": "14",
+        "Output": "Result"
+      },
+      "Opacity": {
+        "Identifier": "10",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "Float4",
+      "Value": "0.35349,0.15035,0,1",
+      "Name": "Bottom Color",
+      "IsAttribute": false,
+      "UI": {
+        "Type": "Color",
+        "PrimaryGroup": {
+          "Name": "Color"
+        }
+      },
+      "Identifier": "1",
+      "Position": "-336,120",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "ObjectPosition",
+      "Identifier": "2",
+      "Position": "-1080,120",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "Lerp",
+      "DefaultA": 0,
+      "DefaultB": 1,
+      "Fraction": 1,
+      "Identifier": "3",
+      "Position": "-60,24",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "1",
+        "Output": "Result"
+      },
+      "B": {
+        "Identifier": "7",
+        "Output": "Result"
+      },
+      "C": {
+        "Identifier": "6",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "Float",
+      "Min": -16,
+      "Max": 16,
+      "Value": -12,
+      "Name": "WallOffset",
+      "IsAttribute": true,
+      "UI": {
+        "Type": "Slider"
+      },
+      "Identifier": "4",
+      "Position": "-528,444",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "SplitVector",
+      "Identifier": "5",
+      "Position": "-780,168",
+      "HandleOffsets": {},
+      "Input": {
+        "Identifier": "2",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "RemapValue",
+      "In": 0.5,
+      "InMin": -16,
+      "InMax": 12,
+      "OutMin": 0,
+      "OutMax": 1,
+      "Clamp": true,
+      "Identifier": "6",
+      "Position": "-516,60",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "5",
+        "Output": "Z"
+      }
+    },
+    {
+      "_class": "Float4",
+      "Value": "1,0.42534,0,1.5",
+      "Name": "Top Color",
+      "IsAttribute": false,
+      "UI": {
+        "Type": "Color",
+        "PrimaryGroup": {
+          "Name": "Color"
+        }
+      },
+      "Identifier": "7",
+      "Position": "-348,-108",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "Add",
+      "DefaultA": 0,
+      "DefaultB": 1.4999996,
+      "Identifier": "8",
+      "Position": "-288,360",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "5",
+        "Output": "Z"
+      },
+      "B": {
+        "Identifier": "4",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "CommentNode",
+      "Size": "676,476",
+      "Color": "Green",
+      "Title": "Color",
+      "Description": "",
+      "Layer": 2,
+      "Identifier": "9",
+      "Position": "-552,-180",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "RemapValue",
+      "In": 0.5,
+      "InMin": 1.0999998,
+      "InMax": -0.29999992,
+      "OutMin": 0,
+      "OutMax": 1,
+      "Clamp": true,
+      "Identifier": "10",
+      "Position": "-144,384",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "8",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "CommentNode",
+      "Size": "604,272",
+      "Color": "Yellow",
+      "Title": "How far into the wall we are",
+      "Description": "",
+      "Layer": 1,
+      "Identifier": "11",
+      "Position": "-552,300",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "RemapValue",
+      "In": 0.5,
+      "InMin": 0,
+      "InMax": 1,
+      "OutMin": 0.95,
+      "OutMax": 1,
+      "Clamp": false,
+      "Identifier": "12",
+      "Position": "24,-408",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "13",
+        "Output": "Result"
+      },
+      "D": {
+        "Identifier": "21",
+        "Output": "Out"
+      },
+      "E": {
+        "Identifier": "23",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "SimplexNoise",
+      "Identifier": "13",
+      "Position": "-168,-420",
+      "HandleOffsets": {},
+      "Coords": {
+        "Identifier": "15",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "Multiply",
+      "DefaultA": 0,
+      "DefaultB": 1,
+      "Identifier": "14",
+      "Position": "312,-108",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "12",
+        "Output": "Result"
+      },
+      "B": {
+        "Identifier": "3",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "TileAndOffset",
+      "DefaultTile": "400,100",
+      "DefaultOffset": "0,324.7",
+      "WrapTo01": false,
+      "Identifier": "15",
+      "Position": "-372,-444",
+      "HandleOffsets": {},
+      "Offset": {
+        "Identifier": "16",
+        "Output": "XY"
+      }
+    },
+    {
+      "_class": "CombineVector",
+      "DefaultX": 0,
+      "DefaultY": 62.499996,
+      "DefaultZ": 0,
+      "DefaultW": 0,
+      "Identifier": "16",
+      "Position": "-600,-444",
+      "HandleOffsets": {},
+      "Y": {
+        "Identifier": "18",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "Time",
+      "Identifier": "17",
+      "Position": "-912,-396",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "Multiply",
+      "DefaultA": 0,
+      "DefaultB": 48,
+      "Identifier": "18",
+      "Position": "-720,-396",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "17",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "CommentNode",
+      "Size": "1132,284",
+      "Color": "Orange",
+      "Title": "Noise",
+      "Description": "",
+      "Layer": 3,
+      "Identifier": "19",
+      "Position": "-924,-516",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "Divide",
+      "DefaultA": 0,
+      "DefaultB": 2,
+      "Identifier": "20",
+      "Position": "-288,-336",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "22",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "OneMinus",
+      "Identifier": "21",
+      "Position": "-156,-360",
+      "HandleOffsets": {},
+      "In": {
+        "Identifier": "20",
+        "Output": "Result"
+      }
+    },
+    {
+      "_class": "Float",
+      "Min": 0,
+      "Max": 1,
+      "Value": 0.1,
+      "Name": "Noise Amount",
+      "IsAttribute": false,
+      "UI": {
+        "Type": "Slider",
+        "PrimaryGroup": {
+          "Name": "Noise"
+        }
+      },
+      "Identifier": "22",
+      "Position": "-600,-312",
+      "HandleOffsets": {}
+    },
+    {
+      "_class": "Add",
+      "DefaultA": 0,
+      "DefaultB": 1,
+      "Identifier": "23",
+      "Position": "-156,-312",
+      "HandleOffsets": {},
+      "A": {
+        "Identifier": "20",
+        "Output": "Result"
+      }
+    }
+  ]
+}

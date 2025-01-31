@@ -120,6 +120,16 @@
                 },
                 "RenderType": "Off",
                 "Tint": "1,1,1,1"
+              },
+              {
+                "__type": "VRBase.SuffocationMesh",
+                "__guid": "d1aeb866-b06a-4131-9473-de47f9f600ee",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
               }
             ]
           }

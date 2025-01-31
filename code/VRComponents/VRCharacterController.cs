@@ -78,6 +78,20 @@ public partial class VRCharacterController : Component
 	}
 
 	/// <summary>
+	/// The position of the playere's eyes relative to the roomspace root (aka this gameobject).
+	/// </summary>
+	public Vector3 LocalEyePos => HMD != null ? HMD.LocalPosition : Vector3.Zero;
+
+	/// <summary>
+	/// The position of the playere's eyes in world space.
+	/// </summary>
+	public Vector3 WorldEyePos
+	{
+		get => this.WorldPosition + LocalEyePos;
+		set { WorldPosition = value - LocalEyePos; }
+	}
+
+	/// <summary>
 	/// The bounding box of the character of the correct size, based on 0,0,0.
 	/// </summary>
 	public BBox BoundingBox => new BBox( new Vector3( 0f - Radius, 0f - Radius, 0f ), new Vector3( Radius, Radius, Height ) );
@@ -274,7 +288,7 @@ public partial class VRCharacterController : Component
 		return BuildTrace( base.Scene.Trace.Ray( in from, in to ), allowStep );
 	}
 
-	private SceneTrace BuildTrace( SceneTrace source, bool allowStep = false )
+	private SceneTrace BuildTrace( in SceneTrace source, bool allowStep = false )
 	{
 		BBox hull = allowStep ? StepBBox : BoundingBox;
 		SceneTrace sceneTrace = source.Size( in hull ).IgnoreGameObjectHierarchy( this.GameObject );

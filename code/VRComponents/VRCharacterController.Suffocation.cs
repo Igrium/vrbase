@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,25 +47,41 @@ public partial class VRCharacterController
 	/// <summary>
 	/// The position where we entered the wall we're suffocating in.
 	/// </summary>
-	public Vector3 SuffocationPos { get; private set; }
+ 	public Vector3 SuffocationPos { get; private set; }
+
+	private bool shouldSuffocate;
+	private Vector3 lastValidHeadPosition;
 
 	protected virtual void TickSuffocation()
 	{
-		if (EnableSuffocation && !IsSuffocating && ShouldSuffocate(out var res))
+		shouldSuffocate = ShouldSuffocate();
+
+		if ( !shouldSuffocate )
 		{
-			StartSuffocating(res);
+			lastValidHeadPosition = WorldEyePos;
 		}
 
-		if (IsSuffocating && MayStopSuffocating())
+		if ( EnableSuffocation && !IsSuffocating && shouldSuffocate )
+		{
+			StartSuffocating();
+		}
+
+		if ( IsSuffocating && MayStopSuffocating() )
 		{
 			StopSuffocating();
 		}
 	}
 
-	protected virtual void StartSuffocating(in SceneTraceResult res)
+	protected virtual void StartSuffocating()
 	{
-		SuffocationNormal = res.Normal;
-		SuffocationPos = res.HitPosition;
+		//SuffocationNormal = res.Normal;
+		//SuffocationPos = res.HitPosition;
+
+		// Trace to suffocation to find the face causing it to start.
+		SceneTraceResult trace = BuildHeadTrace( lastValidHeadPosition, WorldEyePos ).Run();
+		SuffocationPos = trace.EndPosition;
+		SuffocationNormal = trace.Normal;
+		Log.Info( trace );
 		IsSuffocating = true;
 		var mesh = SuffocationMeshComponent;
 		Log.Info( mesh );
@@ -98,12 +115,21 @@ public partial class VRCharacterController
 	/// <summary>
 	/// Check if we should be suffocating given our current head position.
 	/// </summary>
-	/// <param name="traceResult">The trace result causing us to suffocate.</param>
 	/// <returns>Should we suffocate?</returns>
-	private bool ShouldSuffocate(out SceneTraceResult traceResult)
+	private bool ShouldSuffocate()
 	{
-		Vector3 eyePos = HMD.IsValid() ? HMD.WorldPosition : WorldPosition;
-		SceneTrace trace = Scene.Trace.Ray( eyePos, eyePos )
+		Vector3 eyePos = WorldEyePos;
+		return BuildHeadTrace( eyePos, eyePos ).Run().StartedSolid;
+	}
+
+	private SceneTrace BuildHeadTrace( in Vector3 from, in Vector3 to )
+	{
+		return BuildHeadTrace( Scene.Trace.Ray( from, to ) );
+	}
+
+	private SceneTrace BuildHeadTrace( in SceneTrace source )
+	{
+		SceneTrace trace = source
 			.Radius( SuffocationRadius )
 			.IgnoreGameObjectHierarchy( GameObject )
 			.WithoutTags( SuffocationIgnores );
@@ -117,12 +143,8 @@ public partial class VRCharacterController
 			trace = trace.WithoutTags( IgnoreLayers );
 		}
 
-		traceResult = trace.Run();
-		return traceResult.StartedSolid;
+		return trace;
 	}
 
-	private bool ShouldSuffocate()
-	{
-		return ShouldSuffocate( out SceneTraceResult res );
-	}
+
 }
