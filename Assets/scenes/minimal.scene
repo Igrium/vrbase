@@ -2,32 +2,6 @@
   "__guid": "325a4042-0696-43dd-a79d-dcc314299ba3",
   "GameObjects": [
     {
-      "__guid": "0be74a53-2f87-4636-94c9-23f325682813",
-      "Flags": 0,
-      "Name": "Map",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "Sandbox.MapInstance",
-          "__guid": "004f5f78-b8db-4a5b-b917-19f0894b6482",
-          "__version": 1,
-          "EnableCollision": true,
-          "MapName": "facepunch.flatgrass",
-          "NoOrigin": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
-          "UseMapFromLaunch": false
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "025e9f4e-6c9c-49ba-b08e-b8a67ee08921",
       "Flags": 0,
       "Name": "Cube",
@@ -274,7 +248,7 @@
       "__guid": "3228b48a-e9ca-484e-a95e-7f55d5d8670d",
       "Flags": 0,
       "Name": "rollermine",
-      "Position": "-69.08139,116.2072,-12.13151",
+      "Position": "-69.08139,116.2072,15.5146",
       "Enabled": true,
       "Components": [
         {
@@ -302,11 +276,36 @@
       "__guid": "11296477-a1cd-46f6-804c-1a08fe33de7d",
       "Flags": 0,
       "Name": "vr_player",
-      "Position": "-35.23833,-20.90569,-22",
       "Enabled": true,
       "NetworkMode": 1,
       "__Prefab": "prefabs/vr_player.prefab",
       "__PrefabVariables": {}
+    },
+    {
+      "__guid": "12b6744e-47ba-440e-8f4c-ddc05d63f795",
+      "Flags": 0,
+      "Name": "Map",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "Sandbox.MapInstance",
+          "__guid": "3149cec3-bfe0-4c4a-a250-a027e5054152",
+          "__version": 1,
+          "EnableCollision": true,
+          "MapName": "maps/world_playground.vmap",
+          "NoOrigin": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {

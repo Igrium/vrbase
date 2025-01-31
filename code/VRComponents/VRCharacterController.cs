@@ -29,7 +29,7 @@ public class VRCharacterController : Component
 	public GameObject? MovementRoot { get; set; }
 
 	[Property]
-	public float Radius { get; set; } = 16f;
+	public float Radius { get; set; } = 8f;
 
 	[Property]
 	public float StepHeight { get; set; } = 18f;

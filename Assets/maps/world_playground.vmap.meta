@@ -1,0 +1,28 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "World Playground",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "worldplayground",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "ambientcg.paving_stones_002#34885",
+        "facepunch.bathtub#18870",
+        "facepunch.pickup_dev#58636",
+        "microrost.building3out#16606",
+        "polyhaven.kloppenheim_05_puresky#29901",
+        "polyhaven.rustig_koppie_puresky#30194",
+        "rust.wooden_crate_d#25356"
+      ],
+      "IsWhitelistDisabled": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/world_playground.vmap"
+      }
+    }
+  }
+}
