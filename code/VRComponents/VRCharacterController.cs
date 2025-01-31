@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sandbox;
 
 namespace VRBase;
 
@@ -10,7 +11,7 @@ namespace VRBase;
 /// Manages VR player movement and collision.
 /// </summary>
 [Title( "VR Character Controller" )]
-public class VRCharacterController : Component
+public partial class VRCharacterController : Component
 {
 
 	[ConVar("r_vr_debug_gismos")]
@@ -26,21 +27,26 @@ public class VRCharacterController : Component
 	/// The GameObject that joystick movement will be evaluated relative to. If null, use the HMD.
 	/// </summary>
 	[Property]
+	[Category("Movement")]
 	public GameObject? MovementRoot { get; set; }
 
 	[Property]
+	[Category("Movement")]
 	public float Radius { get; set; } = 8f;
 
 	[Property]
+	[Category("Movement")]
 	public float StepHeight { get; set; } = 18f;
 
 	[Property]
+	[Category("Movement")]
 	public float GroundAngle { get; set; } = 45f;
 
 	/// <summary>
 	/// The amount of acceleration to apply while falling, in units per second.
 	/// </summary>
 	[Property]
+	[Category("Movement")]
 	public float FallAcceleration { get; set; } = 385.827f; // 9.8 m/s
 
 	/// <summary>
@@ -48,12 +54,14 @@ public class VRCharacterController : Component
 	/// -1 to disable terminal velocity.
 	/// </summary>
 	[Property]
+	[Category("Movement")]
 	public float TerminalVelocity { get; set; } = -1;
+
 
 	/// <summary>
 	/// The height of the HMD off the ground.
 	/// </summary>
-	public float Height => HMD != null ? HMD.LocalPosition.z : 0;
+	public float Height => HMD != null ? HMD.LocalPosition.z + SuffocationRadius : 0;
 
 	/// <summary>
 	/// The position of the player's feet relative to the roomspace root (aka this gameobject).
@@ -96,25 +104,27 @@ public class VRCharacterController : Component
 	public GameObject? GroundObject { get; private set; }
 	public Collider? GroundCollider { get; private set; }
 
-	[Property]
 	[Title("Use Project Collision Rules")]
+	[Category("Movement")]
 	public bool UseCollisionRules { get; set; }
 
 	[Property]
 	[HideIf( "UseCollisionRules", true )]
+	[Category( "Movement" )]
 	public TagSet IgnoreLayers { get; set; } = new TagSet();
+
 
 	/// <summary>
 	/// The most-recent feet position that was valid.
 	/// </summary>
 	private Vector3 lastValidPosition;
 
-	protected override void OnUpdate()
+	protected virtual void TickMovement()
 	{
 		IsMoving = false;
 
-		Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
-		//Vector3 input = Input.AnalogMove;
+		//Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
+		Vector3 input = Input.AnalogMove;
 
 		// WALKING
 		if ( input.Length >= .1 )
@@ -134,8 +144,8 @@ public class VRCharacterController : Component
 
 			if ( ValidatePosition() )
 			{
-
-				Velocity = (rotInput * 100).WithZ(Velocity.z);
+				StopSuffocating();
+				Velocity = (rotInput * 100).WithZ( Velocity.z );
 				Move( true );
 				IsMoving = true;
 			}
@@ -160,13 +170,13 @@ public class VRCharacterController : Component
 		{
 			if ( TerminalVelocity <= 0 || MathF.Abs( Velocity.z ) < TerminalVelocity )
 			{
-				Velocity = Velocity.WithZ(Velocity.z - MathF.Abs( FallAcceleration ) * Time.Delta );
+				Velocity = Velocity.WithZ( Velocity.z - MathF.Abs( FallAcceleration ) * Time.Delta );
 			}
 
 			// Make sure we have room to fall.
 			Vector3 pos = WorldFeetPos;
 			float fallAmount = Velocity.z * Time.Delta;
-			SceneTraceResult trace = BuildTrace(pos, pos - Vector3.Down * fallAmount).Run();
+			SceneTraceResult trace = BuildTrace( pos, pos - Vector3.Down * fallAmount ).Run();
 
 			WorldFeetPos = trace.EndPosition;
 
@@ -179,13 +189,22 @@ public class VRCharacterController : Component
 		{
 			lastValidPosition = feetPos;
 		}
+	}
+
+
+	protected override void OnUpdate()
+	{
+		
+		if (!IsProxy)
+		{
+			TickMovement();
+			TickSuffocation();
+		}
 
 		if ( VRDebugGismos )
 		{
 			DrawDebugGizmos();
 		}
-
-
 
 	}
 
@@ -218,6 +237,13 @@ public class VRCharacterController : Component
 		{
 			transform.Position = lastValidPosition;
 			DebugOverlay.Box(box, Color.Red, transform: transform);
+		}
+
+		GameObject? hmd = HMD;
+		if (hmd.IsValid())
+		{
+			Sphere suffocation = new Sphere( hmd.WorldPosition, SuffocationRadius );
+			DebugOverlay.Sphere( suffocation, Color.Green );
 		}
 	}
 
@@ -262,6 +288,22 @@ public class VRCharacterController : Component
 		}
 	}
 
+
+	/// <summary>
+	/// Check if the player is allowed to teleport somewhere based on if there's a valid route, etc.
+	/// Note: this doesn't check if the target position is actually valid; just if we can get there.
+	/// </summary>
+	/// <param name="target">Position to check.</param>
+	/// <param name="from">The position we're teleporting from. If absent, use the player's current position.</param>
+	/// <returns>If we can teleport there.</returns>
+	public virtual bool CanReach( in Vector3 target, in Vector3? from = null )
+	{
+		// TODO: actually check if we can reach this.
+		// Implementation should be somewhat leniant,
+		// as this is used for teleport validation AND ensuring player has re-entered valid space in a legal maner.
+		return true;
+	}
+
 	/// <summary>
 	/// Called whenever the player starts fake moving to make sure they didn't move into a wall or something.
 	/// If they did, TP them out.
@@ -270,17 +312,23 @@ public class VRCharacterController : Component
 	private bool ValidatePosition()
 	{
 		Vector3 worldPos = WorldFeetPos;
-		if ( IsPosValid( worldPos ) )
+
+		// Could you have gotten here legally?
+		if ( CanReach( worldPos, lastValidPosition ) )
 		{
-			return true;
-		}
-		else if ( ValidatePosWithStep( ref worldPos ) )
-		{
-			WorldFeetPos = worldPos;
-			return true;
+			if ( IsPosValid( worldPos ) )
+			{
+				return true;
+			}
+			else if ( ValidatePosWithStep( ref worldPos ) )
+			{
+				WorldFeetPos = worldPos;
+				return true;
+			}
 		}
 
 		worldPos = lastValidPosition;
+		// Last valid position might not be valid anymore.
 		if ( IsPosValid( worldPos ) || ValidatePosWithStep( ref worldPos ) )
 		{
 			WorldFeetPos = worldPos;
@@ -362,4 +410,5 @@ public class VRCharacterController : Component
 		_stuckTries++;
 		return true;
 	}
+
 }

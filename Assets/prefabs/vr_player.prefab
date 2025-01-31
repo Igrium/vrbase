@@ -19,6 +19,7 @@
       {
         "__type": "VRBase.VRCharacterController",
         "__guid": "91edad56-f857-406b-a55b-431d2dd99a45",
+        "EnableSuffocation": true,
         "FallAcceleration": 385.827,
         "GroundAngle": 45,
         "HMD": {
@@ -35,8 +36,13 @@
         "OnComponentUpdate": null,
         "Radius": 8,
         "StepHeight": 18,
-        "TerminalVelocity": -1,
-        "UseCollisionRules": true
+        "SuffocationIgnores": "",
+        "SuffocationMesh": {
+          "_type": "gameobject",
+          "go": "f4469774-8366-4f54-9b6e-59ab625950a6"
+        },
+        "SuffocationRadius": 2,
+        "TerminalVelocity": -1
       }
     ],
     "Children": [
@@ -81,6 +87,41 @@
             "Viewport": "0,0,1,1",
             "ZFar": 5000,
             "ZNear": 2
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "f4469774-8366-4f54-9b6e-59ab625950a6",
+            "Flags": 0,
+            "Name": "SuffocationMesh",
+            "Enabled": true,
+            "NetworkMode": 0,
+            "Components": [
+              {
+                "__type": "Sandbox.ModelRenderer",
+                "__guid": "654d7ebe-7cc0-48cd-a10b-52b48d2e680b",
+                "__enabled": false,
+                "BodyGroups": 18446744073709551615,
+                "CreateAttachments": false,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Model": "models/suffocation_mesh.vmdl",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": true,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderType": "Off",
+                "Tint": "1,1,1,1"
+              }
+            ]
           }
         ]
       },
