@@ -25,6 +25,7 @@
           "go": "b1d71e23-ddea-42a9-8ad7-ae673520495e"
         },
         "IgnoreLayers": "",
+        "MovementRoot": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

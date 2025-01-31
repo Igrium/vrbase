@@ -22,6 +22,12 @@ public class VRCharacterController : Component
 	[Property]
 	public GameObject? HMD { get; set; }
 
+	/// <summary>
+	/// The GameObject that joystick movement will be evaluated relative to. If null, use the HMD.
+	/// </summary>
+	[Property]
+	public GameObject? MovementRoot { get; set; }
+
 	[Property]
 	public float Radius { get; set; } = 16f;
 
@@ -80,12 +86,28 @@ public class VRCharacterController : Component
 	{
 		//if ( IsProxy ) return;
 
-		Vector3 input = Input.AnalogMove;
-		if ( input.IsNearlyZero() ) return;
+		Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
+
+		
+
+		if ( input.Length < .1 ) return;
+
+		Rotation joystickRot = WorldRotation;
+		if ( MovementRoot != null )
+		{
+			joystickRot = MovementRoot.WorldRotation;
+		}
+		else if (HMD != null)
+		{
+			joystickRot = HMD.WorldRotation;
+		}
+
+		Vector3 rotInput = (new Vector3( input.y, -input.x, 0 ) * joystickRot).WithZ( 0 ).Normal;
+		rotInput *= input.Length;
 
 		if ( ValidatePosition() )
 		{
-			Velocity = input * 100;
+			Velocity = rotInput * 100;
 			Move( true );
 		}
 
