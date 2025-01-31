@@ -38,6 +38,19 @@ public class VRCharacterController : Component
 	public float GroundAngle { get; set; } = 45f;
 
 	/// <summary>
+	/// The amount of acceleration to apply while falling, in units per second.
+	/// </summary>
+	[Property]
+	public float FallAcceleration { get; set; } = 385.827f; // 9.8 m/s
+
+	/// <summary>
+	/// When falling, stop adding acceleration when we reach this velocity.
+	/// -1 to disable terminal velocity.
+	/// </summary>
+	[Property]
+	public float TerminalVelocity { get; set; } = -1;
+
+	/// <summary>
 	/// The height of the HMD off the ground.
 	/// </summary>
 	public float Height => HMD != null ? HMD.LocalPosition.z : 0;
@@ -69,6 +82,16 @@ public class VRCharacterController : Component
 	[Sync]
 	public Vector3 Velocity { get; set; }
 
+
+	/// <summary>
+	/// Whether the character is currently falling using fake movement.
+	/// Note: it's possible to not be on the ground yet not falling.
+	/// </summary>
+	public bool IsFalling { get; private set; }
+
+	public GameObject? GroundObject { get; private set; }
+	public Collider? GroundCollider { get; private set; }
+
 	[Property]
 	[Title("Use Project Collision Rules")]
 	public bool UseCollisionRules { get; set; }
@@ -87,30 +110,68 @@ public class VRCharacterController : Component
 		//if ( IsProxy ) return;
 
 		Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
+		//Vector3 input = Input.AnalogMove;
 
-		
-
-		if ( input.Length < .1 ) return;
-
-		Rotation joystickRot = WorldRotation;
-		if ( MovementRoot != null )
+		// WALKING
+		if ( input.Length >= .1 )
 		{
-			joystickRot = MovementRoot.WorldRotation;
+			Rotation joystickRot = WorldRotation;
+			if ( MovementRoot != null )
+			{
+				joystickRot = MovementRoot.WorldRotation;
+			}
+			else if ( HMD != null )
+			{
+				joystickRot = HMD.WorldRotation;
+			}
+
+			Vector3 rotInput = (new Vector3( input.y, -input.x, 0 ) * joystickRot).WithZ( 0 ).Normal;
+			rotInput *= input.Length;
+
+			if ( ValidatePosition() )
+			{
+
+				Velocity = (rotInput * 100).WithZ(Velocity.z);
+				Move( true );
+			}
+
 		}
-		else if (HMD != null)
+
+		// FALLING
+		UpdateGroundObject();
+		if ( GroundObject != null )
 		{
-			joystickRot = HMD.WorldRotation;
+			IsFalling = false;
+			Velocity = Velocity.WithZ( 0f );
 		}
 
-		Vector3 rotInput = (new Vector3( input.y, -input.x, 0 ) * joystickRot).WithZ( 0 ).Normal;
-		rotInput *= input.Length;
-
-		if ( ValidatePosition() )
+		// Only start falling if we're allowed to fake move
+		if ( input.Length >= .1 && GroundObject == null && FallAcceleration > 0 )
 		{
-			Velocity = rotInput * 100;
-			Move( true );
+			IsFalling = true;
 		}
 
+		if ( IsFalling )
+		{
+			if ( TerminalVelocity <= 0 || MathF.Abs( Velocity.z ) < TerminalVelocity )
+			{
+				Velocity = Velocity.WithZ(Velocity.z - MathF.Abs( FallAcceleration ) * Time.Delta );
+			}
+
+			// Make sure we have room to fall.
+			Vector3 pos = WorldFeetPos;
+			float fallAmount = Velocity.z * Time.Delta;
+			SceneTraceResult trace = BuildTrace(pos, pos - Vector3.Down * fallAmount).Run();
+
+			WorldFeetPos = trace.EndPosition;
+			
+			if (trace.Hit)
+			{
+				IsFalling = false;
+			}
+		}
+
+		// POS VALIATION
 		var feetPos = this.WorldFeetPos;
 		if ( IsPosValid( feetPos, true ) )
 		{
@@ -122,6 +183,26 @@ public class VRCharacterController : Component
 			DrawDebugGizmos();
 		}
 
+
+
+	}
+
+	protected virtual void UpdateGroundObject()
+	{
+		Vector3 from = this.WorldFeetPos;
+		Vector3 to = from + Vector3.Down * 2f;
+
+		SceneTraceResult trace = BuildTrace( from, to ).Run();
+		if (trace.Hit)
+		{
+			GroundObject = trace.GameObject;
+			GroundCollider = trace.Shape?.Collider as Collider;
+		}
+		else
+		{
+			GroundObject = null;
+			GroundCollider = null;
+		}
 	}
 
 	protected virtual void DrawDebugGizmos()
@@ -224,7 +305,6 @@ public class VRCharacterController : Component
 		}
 		//CharacterControllerHelper character = new CharacterControllerHelper(BuildTrace(pos, pos), pos, Vector3.Zero);
 		//character.TraceMove( Vector3.Up * StepHeight );
-
 	}
 
 	private void Move(bool step)

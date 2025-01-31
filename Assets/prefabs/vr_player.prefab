@@ -19,6 +19,7 @@
       {
         "__type": "VRBase.VRCharacterController",
         "__guid": "91edad56-f857-406b-a55b-431d2dd99a45",
+        "FallAcceleration": 385.827,
         "GroundAngle": 45,
         "HMD": {
           "_type": "gameobject",
@@ -32,8 +33,9 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "Radius": 16,
+        "Radius": 8,
         "StepHeight": 18,
+        "TerminalVelocity": -1,
         "UseCollisionRules": false
       }
     ],

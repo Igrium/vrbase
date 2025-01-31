@@ -196,7 +196,7 @@
           },
           {
             "__guid": "7a49111d-7307-47ad-90c3-f0cea8967f27",
-            "Flags": 1,
+            "Flags": 0,
             "Name": "Colliders",
             "Enabled": true,
             "Components": [
