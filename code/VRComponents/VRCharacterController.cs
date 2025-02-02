@@ -73,8 +73,8 @@ public partial class VRCharacterController : Component
 	/// </summary>
 	public Vector3 WorldFeetPos
 	{
-		get => this.WorldPosition + LocalFeetPos;
-		set { WorldPosition = value - LocalFeetPos; }
+		get => this.WorldTransform.PointToWorld( LocalFeetPos );
+		set { WorldPosition = computeParentPosition( this.WorldTransform, value, LocalFeetPos ); }
 	}
 
 	/// <summary>
@@ -87,8 +87,8 @@ public partial class VRCharacterController : Component
 	/// </summary>
 	public Vector3 WorldEyePos
 	{
-		get => this.WorldPosition + LocalEyePos;
-		set { WorldPosition = value - LocalEyePos; }
+		get => this.WorldTransform.PointToWorld( LocalEyePos );
+		set { WorldPosition = computeParentPosition( this.WorldTransform, value, LocalEyePos ); }
 	}
 
 	/// <summary>
@@ -100,6 +100,8 @@ public partial class VRCharacterController : Component
 	/// A bounding box with the bottom slightly raised to account for step height.
 	/// </summary>
 	public BBox StepBBox => new BBox( new Vector3( 0f - Radius, 0f - Radius, StepHeight ), new Vector3( Radius, Radius, Height ) );
+	
+	
 
 	[Sync]
 	public Vector3 Velocity { get; set; }
@@ -199,7 +201,7 @@ public partial class VRCharacterController : Component
 
 		// POS VALIATION
 		var feetPos = this.WorldFeetPos;
-		if ( IsPosValid( feetPos, true ) )
+		if ( !IsSuffocating && IsPosValid( feetPos, true ) )
 		{
 			lastValidPosition = feetPos;
 		}
@@ -253,12 +255,16 @@ public partial class VRCharacterController : Component
 			DebugOverlay.Box(box, Color.Red, transform: transform);
 		}
 
-		GameObject? hmd = HMD;
-		if (hmd.IsValid())
+		Vector3 hmdPos = WorldEyePos;
+		Sphere suffocation = new Sphere( hmdPos, SuffocationRadius );
+		DebugOverlay.Sphere( suffocation, Color.Green );
+		//DebugOverlay.Box( HeadBBox, Color.Magenta );
+
+		if ( lastValidHeadPosition != LocalEyePos )
 		{
-			Sphere suffocation = new Sphere( hmd.WorldPosition, SuffocationRadius );
-			DebugOverlay.Sphere( suffocation, Color.Green );
+			DebugOverlay.Sphere( new Sphere( WorldTransform.PointToWorld( lastValidHeadPosition ), SuffocationRadius ), Color.Orange );
 		}
+
 	}
 
 	/// <summary>
@@ -328,7 +334,7 @@ public partial class VRCharacterController : Component
 		Vector3 worldPos = WorldFeetPos;
 
 		// Could you have gotten here legally?
-		if ( CanReach( worldPos, lastValidPosition ) )
+		if ( !IsSuffocating && CanReach( worldPos, lastValidPosition ) )
 		{
 			if ( IsPosValid( worldPos ) )
 			{
@@ -425,4 +431,15 @@ public partial class VRCharacterController : Component
 		return true;
 	}
 
+	/// <summary>
+	/// Compute the position of a parent object so that a child with a given local position will be at a given world position.
+	/// </summary>
+	/// <param name="currentTransform">Current transform of the parent. Used for rotation and scale.</param>
+	/// <param name="targetWorld">Target child world position.</param>
+	/// <param name="targetLocal">Target child local position.</param>
+	/// <returns>The the position the parent should take.</returns>
+	private static Vector3 computeParentPosition( in Transform currentTransform, in Vector3 targetWorld, in Vector3 targetLocal )
+	{
+		return targetWorld - (currentTransform.Rotation * (targetLocal * currentTransform.Scale));
+	}
 }

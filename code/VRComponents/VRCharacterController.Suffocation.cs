@@ -50,16 +50,15 @@ public partial class VRCharacterController
  	public Vector3 SuffocationPos { get; private set; }
 
 	private bool shouldSuffocate;
+
+	/// <summary>
+	/// Keep last valid head pos in room space so that an unexpected fake move doesn't cause us to start suffocating because the trace is blocked.
+	/// </summary>
 	private Vector3 lastValidHeadPosition;
 
 	protected virtual void TickSuffocation()
 	{
 		shouldSuffocate = ShouldSuffocate();
-
-		if ( !shouldSuffocate )
-		{
-			lastValidHeadPosition = WorldEyePos;
-		}
 
 		if ( EnableSuffocation && !IsSuffocating && shouldSuffocate )
 		{
@@ -70,23 +69,28 @@ public partial class VRCharacterController
 		{
 			StopSuffocating();
 		}
+
+		if ( !IsSuffocating )
+		{
+			lastValidHeadPosition = LocalEyePos;
+		}
 	}
 
 	protected virtual void StartSuffocating()
 	{
-		//SuffocationNormal = res.Normal;
-		//SuffocationPos = res.HitPosition;
-
 		// Trace to suffocation to find the face causing it to start.
-		SceneTraceResult trace = BuildHeadTrace( lastValidHeadPosition, WorldEyePos ).Run();
+		Vector3 traceStart = WorldTransform.PointToWorld( lastValidHeadPosition );
+		Vector3 eyePos = WorldEyePos;
+		Vector3 traceEnd = (eyePos - traceStart) * 10 + traceStart;
+
+		SceneTraceResult trace = BuildHeadTrace( traceStart, traceEnd ).Run();
+
 		SuffocationPos = trace.EndPosition;
 		SuffocationNormal = trace.Normal;
-		Log.Info( trace );
 		IsSuffocating = true;
-		var mesh = SuffocationMeshComponent;
-		Log.Info( mesh );
 
-		if ( mesh.IsValid())
+		var mesh = SuffocationMeshComponent;
+		if ( mesh.IsValid() )
 		{
 			mesh.Enabled = true;
 		}
@@ -96,7 +100,7 @@ public partial class VRCharacterController
 	{
 		IsSuffocating = false;
 		var mesh = SuffocationMeshComponent;
-		if (mesh.IsValid())
+		if ( mesh.IsValid() )
 		{
 			mesh.Enabled = false;
 		}
@@ -109,8 +113,9 @@ public partial class VRCharacterController
 	/// <returns>Whether we can stop suffocating.</returns>
 	protected virtual bool MayStopSuffocating()
 	{
-		return !ShouldSuffocate() && CanReach( WorldFeetPos, lastValidPosition );
+		return !ShouldSuffocate();
 	}
+
 
 	/// <summary>
 	/// Check if we should be suffocating given our current head position.
@@ -119,20 +124,30 @@ public partial class VRCharacterController
 	private bool ShouldSuffocate()
 	{
 		Vector3 eyePos = WorldEyePos;
-		return BuildHeadTrace( eyePos, eyePos ).Run().StartedSolid;
+		var trace = BuildHeadTrace( WorldTransform.PointToWorld( lastValidHeadPosition ), eyePos, SuffocationRadius ).Run();
+		// If the trace started solid, we obviously have an incorrect last valid head pos, so don't use it.
+		if ( trace.StartedSolid )
+		{
+			trace = BuildHeadTrace( eyePos, eyePos, SuffocationRadius ).Run();
+		}
+		return trace.Hit;
 	}
 
-	private SceneTrace BuildHeadTrace( in Vector3 from, in Vector3 to )
+	private SceneTrace BuildHeadTrace( in Vector3 from, in Vector3 to, float? radius = null )
 	{
-		return BuildHeadTrace( Scene.Trace.Ray( from, to ) );
+		return BuildHeadTrace( Scene.Trace.Ray( from, to ), radius );
 	}
 
-	private SceneTrace BuildHeadTrace( in SceneTrace source )
+	private SceneTrace BuildHeadTrace( in SceneTrace source, float? radius = null )
 	{
 		SceneTrace trace = source
-			.Radius( SuffocationRadius )
 			.IgnoreGameObjectHierarchy( GameObject )
 			.WithoutTags( SuffocationIgnores );
+
+		if (radius.HasValue)
+		{
+			trace = trace.Radius( radius.Value );
+		}
 
 		if ( UseCollisionRules )
 		{

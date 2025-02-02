@@ -248,7 +248,8 @@
       "__guid": "3228b48a-e9ca-484e-a95e-7f55d5d8670d",
       "Flags": 0,
       "Name": "rollermine",
-      "Position": "-69.08139,116.2072,15.5146",
+      "Position": "-69.11293,115.8812,13.41114",
+      "Rotation": "0.01220049,-0.001180521,-0.000005537736,0.999925",
       "Enabled": true,
       "Components": [
         {
@@ -276,6 +277,7 @@
       "__guid": "11296477-a1cd-46f6-804c-1a08fe33de7d",
       "Flags": 0,
       "Name": "vr_player",
+      "Position": "0,0,16.64625",
       "Enabled": true,
       "NetworkMode": 1,
       "__Prefab": "prefabs/vr_player.prefab",
