@@ -77,13 +77,11 @@ public partial class VRCharacterController
 	protected virtual void StartSuffocating()
 	{
 		// Trace to suffocation to find the face causing it to start.
-		Vector3 traceStart = WorldTransform.PointToWorld( lastValidHeadPosition );
+		Vector3 lastEyePos = WorldTransform.PointToWorld( lastValidHeadPosition );
 		Vector3 eyePos = WorldEyePos;
-		Vector3 traceEnd = (eyePos - traceStart) * 1000 + traceStart;
-		SceneTraceResult trace = BuildHeadTrace( traceStart, traceEnd ).Run();
 
-		SuffocationPos = trace.EndPosition;
-		SuffocationNormal = trace.Normal;
+		SuffocationPos = (eyePos + lastEyePos) / 2;
+		SuffocationNormal = (lastEyePos - WorldEyePos).Normal;
 		IsSuffocating = true;
 
 		var mesh = SuffocationMeshComponent;

@@ -24,10 +24,10 @@ public sealed class SuffocationMesh : Component
 			WorldRotation = Rotation.LookAt( player.SuffocationNormal ).RotateAroundAxis(Vector3.Right, -90);
 
 			ModelRenderer? model = Model;
-			if (model.IsValid())
+			if ( model.IsValid() )
 			{
 				Plane suffocationPlane = new Plane( player.SuffocationPos, player.SuffocationNormal );
-				float dist = suffocationPlane.GetDistance( player.WorldEyePos ) * 4;
+				float dist = MathF.Max(suffocationPlane.GetDistance( player.WorldEyePos ) * 5, -15.5f);
 
 				model.SceneObject.Attributes.Set( "WallOffset", dist );
 			}

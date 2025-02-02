@@ -79,7 +79,7 @@ PS
 	
 	float4 MainPs( PixelInput i ) : SV_Target0
 	{
-		float timeMultiplied = g_flTime * 48;
+		float timeMultiplied = g_flTime * 24;
 
 	// Calculate noise UV coordinates
 	float2 noiseUV = float2(0, timeMultiplied);

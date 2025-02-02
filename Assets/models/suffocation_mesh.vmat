@@ -5,9 +5,9 @@ Layer0
 	shader "models/suffocation.shader"
 
 	//---- Color ----
-	g_vBottomColor "[0.349020 0.149020 0.000000 1.000000]"
+	g_vBottomColor "[0.235294 0.098039 0.000000 1.000000]"
 	g_vTopColor "[1.000000 0.431373 0.000000 1.000000]"
 
 	//---- Noise ----
-	g_flNoiseAmount "0.100"
+	g_flNoiseAmount "0.022"
 }
