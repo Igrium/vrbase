@@ -13,6 +13,8 @@ public sealed class SuffocationMesh : Component
 {
 	public VRCharacterController? Player => GetComponentInParent<VRCharacterController>();
 
+	public ModelRenderer? Model => GetComponent<ModelRenderer>();
+
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
@@ -20,6 +22,15 @@ public sealed class SuffocationMesh : Component
 		if (player.IsValid() && player.IsSuffocating)
 		{
 			WorldRotation = Rotation.LookAt( player.SuffocationNormal ).RotateAroundAxis(Vector3.Right, -90);
+
+			ModelRenderer? model = Model;
+			if (model.IsValid())
+			{
+				Plane suffocationPlane = new Plane( player.SuffocationPos, player.SuffocationNormal );
+				float dist = suffocationPlane.GetDistance( player.WorldEyePos ) * 4;
+
+				model.SceneObject.Attributes.Set( "WallOffset", dist );
+			}
 		}
 	}
 }

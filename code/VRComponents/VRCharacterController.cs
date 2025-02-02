@@ -139,9 +139,16 @@ public partial class VRCharacterController : Component
 	{
 		IsMoving = false;
 
-		//Vector3 input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
-		Vector3 input = Input.AnalogMove;
-
+		Vector3 input;
+		if ( Game.IsRunningInVR )
+		{
+			input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
+		}
+		else
+		{
+			input = Input.AnalogMove;
+		}
+		//Vector3 input = 
 		// WALKING
 		if ( input.Length >= .1 )
 		{

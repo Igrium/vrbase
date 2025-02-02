@@ -41,7 +41,7 @@
           "_type": "gameobject",
           "go": "f4469774-8366-4f54-9b6e-59ab625950a6"
         },
-        "SuffocationRadius": 2,
+        "SuffocationRadius": 4,
         "TerminalVelocity": -1
       }
     ],

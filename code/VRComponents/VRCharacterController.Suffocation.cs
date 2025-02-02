@@ -19,7 +19,7 @@ public partial class VRCharacterController
 
 	[Property]
 	[Category( "Suffocation" )]
-	public float SuffocationRadius { get; set; } = 2f;
+	public float SuffocationRadius { get; set; } = 3f;
 
 	/// <summary>
 	/// Colliders in this category will prevent movement but won't cause suffocation.
@@ -40,12 +40,12 @@ public partial class VRCharacterController
 	public bool IsSuffocating { get; private set; }
 
 	/// <summary>
-	/// The normal of the wall causing us to suffocate.
+	/// The world-space normal of the wall causing us to suffocate.
 	/// </summary>
 	public Vector3 SuffocationNormal { get; private set; }
 
 	/// <summary>
-	/// The position where we entered the wall we're suffocating in.
+	/// The world-space position where we entered the wall we're suffocating in.
 	/// </summary>
  	public Vector3 SuffocationPos { get; private set; }
 
@@ -58,14 +58,12 @@ public partial class VRCharacterController
 
 	protected virtual void TickSuffocation()
 	{
-		shouldSuffocate = ShouldSuffocate();
 
-		if ( EnableSuffocation && !IsSuffocating && shouldSuffocate )
+		if ( EnableSuffocation && !IsSuffocating && ShouldSuffocate() )
 		{
 			StartSuffocating();
 		}
-
-		if ( IsSuffocating && MayStopSuffocating() )
+		else if ( IsSuffocating && MayStopSuffocating() )
 		{
 			StopSuffocating();
 		}
@@ -81,8 +79,7 @@ public partial class VRCharacterController
 		// Trace to suffocation to find the face causing it to start.
 		Vector3 traceStart = WorldTransform.PointToWorld( lastValidHeadPosition );
 		Vector3 eyePos = WorldEyePos;
-		Vector3 traceEnd = (eyePos - traceStart) * 10 + traceStart;
-
+		Vector3 traceEnd = (eyePos - traceStart) * 1000 + traceStart;
 		SceneTraceResult trace = BuildHeadTrace( traceStart, traceEnd ).Run();
 
 		SuffocationPos = trace.EndPosition;
