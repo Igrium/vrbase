@@ -1,6 +1,5 @@
 # Blender 4.3.2
 # www.blender.org
-mtllib suffocation_mesh.mtl
 o Sphere
 v 0.000000 8.000000 -13.856408
 v 0.000000 4.141105 -15.454815

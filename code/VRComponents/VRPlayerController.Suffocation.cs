@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VRBase;
 
-public partial class VRCharacterController
+public partial class VRPlayerController
 {
 
 	/// <summary>

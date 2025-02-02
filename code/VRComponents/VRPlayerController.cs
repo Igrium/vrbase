@@ -10,8 +10,8 @@ namespace VRBase;
 /// <summary>
 /// Manages VR player movement and collision.
 /// </summary>
-[Title( "VR Character Controller" )]
-public partial class VRCharacterController : Component
+[Title( "VR Player Controller" )]
+public partial class VRPlayerController : Component
 {
 
 	[ConVar("r_vr_debug_gismos")]
@@ -100,7 +100,6 @@ public partial class VRCharacterController : Component
 	/// A bounding box with the bottom slightly raised to account for step height.
 	/// </summary>
 	public BBox StepBBox => new BBox( new Vector3( 0f - Radius, 0f - Radius, StepHeight ), new Vector3( Radius, Radius, Height ) );
-	
 	
 
 	[Sync]

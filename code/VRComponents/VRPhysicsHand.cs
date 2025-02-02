@@ -1,19 +1,16 @@
 ﻿
 
-using Sandbox.Physics;
-using FixedJoint = Sandbox.Physics.FixedJoint;
-
 namespace VRBase;
 
+[Title("VR Physics Hand")]
 public sealed class VRPhysicsHand : Component
 {
 	[Property]
 	public GameObject? TrackingHand { get; set; }
 
-	[Property, RequireComponent]
-	public Rigidbody? Rigidbody { get; set; }
+	public Rigidbody? Rigidbody => GetOrAddComponent<Rigidbody>();
 
-	public VRCharacterController? Controller => GameObject.GetComponentInParent<VRCharacterController?>();
+	public VRPlayerController? Player => GameObject.GetComponentInParent<VRPlayerController?>();
 
 	[Property]
 	public float posKp { get; set; } = 4000f;
@@ -30,8 +27,8 @@ public sealed class VRPhysicsHand : Component
 
 	public float rotMagnitudeClamp = 100000f;
 
-	[Property]
-	public bool UseRealForce { get; set; } = true;
+	//[Property]
+	//public bool UseRealForce { get; set; } = true;
 
 	private Vector3 prevRotDifference = Vector3.Zero;
 	private Vector3 prevPosDifference = Vector3.Zero;
@@ -53,8 +50,8 @@ public sealed class VRPhysicsHand : Component
 
 		if ( Rigidbody.IsValid() && TrackingHand.IsValid() )
 		{
-			VRCharacterController? controller = Controller;
-			if (controller.IsValid() && controller.IsMoving)
+			VRPlayerController? player = Player;
+			if (player.IsValid() && player.IsMoving)
 			{
 				Rigidbody.WorldPosition = GetProjectedTransform();
 				Rigidbody.WorldRotation = TrackingHand.WorldRotation;
@@ -78,7 +75,7 @@ public sealed class VRPhysicsHand : Component
 
 	private Vector3 GetProjectedTransform()
 	{
-		VRCharacterController? controller = Controller;
+		VRPlayerController? controller = Player;
 		GameObject? HMD = controller?.HMD;
 		if ( controller == null || HMD == null || TrackingHand == null )
 		{

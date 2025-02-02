@@ -11,7 +11,7 @@ namespace VRBase;
 /// </summary>
 public sealed class SuffocationMesh : Component
 {
-	public VRCharacterController? Player => GetComponentInParent<VRCharacterController>();
+	public VRPlayerController? Player => GetComponentInParent<VRPlayerController>();
 
 	public ModelRenderer? Model => GetComponent<ModelRenderer>();
 

@@ -17,8 +17,8 @@
         "OnComponentUpdate": null
       },
       {
-        "__type": "VRBase.VRCharacterController",
-        "__guid": "91edad56-f857-406b-a55b-431d2dd99a45",
+        "__type": "VRBase.VRPlayerController",
+        "__guid": "fcadc389-47b6-41cf-9bfb-e51bbdb00d01",
         "EnableSuffocation": true,
         "FallAcceleration": 385.827,
         "GroundAngle": 45,
@@ -41,7 +41,7 @@
           "_type": "gameobject",
           "go": "f4469774-8366-4f54-9b6e-59ab625950a6"
         },
-        "SuffocationRadius": 4,
+        "SuffocationRadius": 3,
         "TerminalVelocity": -1
       }
     ],
