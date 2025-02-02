@@ -5,8 +5,8 @@ namespace VRBase;
 /// <summary>
 /// Uses makes a rigid body follow an object using a proportional-derivative controller.
 /// </summary>
-[Title("PD Controller")]
-public class PDController : Component
+[Title("PID Controller")]
+public class PIDController : Component
 {
 	/// <summary>
 	/// The gameobject to follow.
@@ -26,10 +26,13 @@ public class PDController : Component
 	public PhysicsBody? PhysicsBody => Rigidbody?.PhysicsBody;
 
 	[Property]
-	public float PosKp { get; set; } = 4000f;
+	public float PosKp { get; set; } = 3000;
 
 	[Property]
-	public float PosKd { get; set; } = 400f;
+	public float PosKi { get; set; } = 0;
+
+	[Property]
+	public float PosKd { get; set; } = 150;
 
 	[Property]
 	public float RotKp { get; set; } = 600000f;
@@ -37,8 +40,17 @@ public class PDController : Component
 	[Property]
 	public float RotKd { get; set; } = 100000f;
 
-	private Vector3 prevRotDifference = Vector3.Zero;
-	private Vector3 prevPosDifference = Vector3.Zero;
+	private Vector3 prevRotError = Vector3.Zero;
+	private Vector3 posI = Vector3.Zero;
+	private Vector3 prevPosError = Vector3.Zero;
+
+	protected override void OnEnabled()
+	{
+		base.OnEnabled();
+		prevRotError = Vector3.Zero;
+		posI = Vector3.Zero;
+		prevPosError = Vector3.Zero;
+	}
 
 	protected override void OnFixedUpdate()
 	{
@@ -49,7 +61,7 @@ public class PDController : Component
 
 		if ( body.IsValid() && target.IsValid() )
 		{
-			Vector3 force = PositionPD( body.Position, target.WorldPosition );
+			Vector3 force = PositionPID( body.Position, target.WorldPosition );
 			body.ApplyForce( force );
 
 			Vector3 torque = RotationPD( body.Rotation, target.WorldRotation );
@@ -57,21 +69,23 @@ public class PDController : Component
 		}
 	}
 
-	private Vector3 PositionPD( in Vector3 currentPos, in Vector3 targetPos )
+	private Vector3 PositionPID( in Vector3 currentPos, in Vector3 targetPos )
 	{
 		Vector3 p = targetPos - currentPos;
-		Vector3 d = (p - prevPosDifference) / Time.Delta;
-		prevPosDifference = p;
+		posI += p * Time.Delta;
+		posI = posI.ClampLength( 1000 );
+		Vector3 d = (p - prevPosError) / Time.Delta;
+		prevPosError = p.ClampLength(5);
 
-		return p * PosKp + d * PosKd;
+		return p * PosKp + posI * PosKi + d * PosKd;
 	}
 
 	private Vector3 RotationPD( in Rotation currentRotation, in Rotation targetRotation )
 	{
 		Rotation rot = targetRotation * currentRotation.Inverse;
 		Vector3 p = new Vector3( rot.x, rot.y, rot.z ) * rot.w * Time.Delta;
-		Vector3 d = (p - prevRotDifference) / Time.Delta;
-		prevRotDifference = p;
+		Vector3 d = (p - prevRotError) / Time.Delta;
+		prevRotError = p;
 		return p * RotKp + d * RotKd;
 	}
 }
