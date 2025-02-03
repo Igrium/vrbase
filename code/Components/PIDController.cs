@@ -44,12 +44,20 @@ public class PIDController : Component
 	private Vector3 posI = Vector3.Zero;
 	private Vector3 prevPosError = Vector3.Zero;
 
+	/// <summary>
+	/// Reset the PID values of this controller. Call after a teleport.
+	/// </summary>
+	public virtual void ResetPID()
+	{
+		prevPosError = Vector3.Zero;
+		posI = Vector3.Zero;
+		prevPosError = Vector3.Zero;
+	}
+
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
-		prevRotError = Vector3.Zero;
-		posI = Vector3.Zero;
-		prevPosError = Vector3.Zero;
+		Reset();
 	}
 
 	protected override void OnFixedUpdate()
