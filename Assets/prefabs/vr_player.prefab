@@ -271,7 +271,7 @@
               "Roll": false
             },
             "MassCenterOverride": "0,0,0",
-            "MassOverride": 0,
+            "MassOverride": 1,
             "MotionEnabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -292,12 +292,12 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "PosKd": 100,
-            "PosKi": 3,
-            "PosKp": 200,
+            "PosKd": 120,
+            "PosKi": 0,
+            "PosKp": 300,
             "Rigidbody": null,
-            "RotKd": 100000,
-            "RotKp": 600000,
+            "RotKd": 8000,
+            "RotKp": 500000,
             "Target": null
           }
         ]

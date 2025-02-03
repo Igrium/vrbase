@@ -26,19 +26,19 @@ public class PIDController : Component
 	public PhysicsBody? PhysicsBody => Rigidbody?.PhysicsBody;
 
 	[Property]
-	public float PosKp { get; set; } = 3000;
+	public float PosKp { get; set; } = 300;
 
 	[Property]
 	public float PosKi { get; set; } = 0;
 
 	[Property]
-	public float PosKd { get; set; } = 150;
+	public float PosKd { get; set; } = 120;
 
 	[Property]
-	public float RotKp { get; set; } = 600000f;
+	public float RotKp { get; set; } = 50000f;
 
 	[Property]
-	public float RotKd { get; set; } = 100000f;
+	public float RotKd { get; set; } = 8000f;
 
 	private Vector3 prevRotError = Vector3.Zero;
 	private Vector3 posI = Vector3.Zero;
@@ -72,6 +72,7 @@ public class PIDController : Component
 	private Vector3 PositionPID( in Vector3 currentPos, in Vector3 targetPos )
 	{
 		Vector3 p = targetPos - currentPos;
+		p = p.ClampLength(9);
 		posI += p * Time.Delta;
 		posI = posI.ClampLength( 1000 );
 		Vector3 d = (p - prevPosError) / Time.Delta;
