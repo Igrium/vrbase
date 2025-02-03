@@ -35,10 +35,10 @@ public class PIDController : Component
 	public float PosKd { get; set; } = 120;
 
 	[Property]
-	public float RotKp { get; set; } = 50000f;
+	public float RotKp { get; set; } = 60000;
 
 	[Property]
-	public float RotKd { get; set; } = 8000f;
+	public float RotKd { get; set; } = 6000;
 
 	private Vector3 prevRotError = Vector3.Zero;
 	private Vector3 posI = Vector3.Zero;

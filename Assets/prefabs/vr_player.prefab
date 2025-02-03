@@ -154,6 +154,45 @@
             "PoseSource": "LeftHand",
             "TrackingType": "All",
             "UseRelativeTransform": false
+          },
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "ea7fef3e-3472-4e59-be65-2c71f1d40390",
+            "__enabled": false,
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": "materials/dev/transparent_hand.vmat",
+            "Model": "models/vr_hand_left.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
           }
         ]
       },
@@ -296,8 +335,132 @@
             "PosKi": 0,
             "PosKp": 300,
             "Rigidbody": null,
-            "RotKd": 8000,
-            "RotKp": 500000,
+            "RotKd": 6000,
+            "RotKp": 60000,
+            "Target": null
+          }
+        ]
+      },
+      {
+        "__guid": "e5aaa907-cdfc-4491-9e35-7a37b02e764e",
+        "Flags": 0,
+        "Name": "RightPhysicsHand",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "VRBase.VRPhysicsHand",
+            "__guid": "d54ff63e-a4cd-420d-b8f6-40e48772cf97",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "TrackingHand": {
+              "_type": "gameobject",
+              "go": "4ac89704-18c2-4f65-9a2a-9df311198261"
+            }
+          },
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "c66c4c45-67d0-4c31-b9d5-58b5acc8bdc2",
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Model": "models/vr_hand_right.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          },
+          {
+            "__type": "Sandbox.ModelCollider",
+            "__guid": "b362b997-394c-49e0-9bb2-4c3a431a543e",
+            "Friction": null,
+            "IsTrigger": false,
+            "Model": "models/vr_hand_right.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "Static": false,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "Sandbox.Rigidbody",
+            "__guid": "0a8fba65-816a-4d8d-920f-dfff573f9f88",
+            "AngularDamping": 0,
+            "Gravity": false,
+            "LinearDamping": 0,
+            "Locking": {
+              "X": false,
+              "Y": false,
+              "Z": false,
+              "Pitch": false,
+              "Yaw": false,
+              "Roll": false
+            },
+            "MassCenterOverride": "0,0,0",
+            "MassOverride": 1,
+            "MotionEnabled": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OverrideMassCenter": false,
+            "RigidbodyFlags": 0,
+            "StartAsleep": false
+          },
+          {
+            "__type": "VRBase.PIDController",
+            "__guid": "36f4a08b-62da-4f48-81b9-c6cf54cfe91c",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PosKd": 120,
+            "PosKi": 0,
+            "PosKp": 300,
+            "Rigidbody": null,
+            "RotKd": 6000,
+            "RotKp": 60000,
             "Target": null
           }
         ]
@@ -334,7 +497,8 @@
   "DontBreakAsTemplate": false,
   "ResourceVersion": 1,
   "__references": [
-    "krotter.vr_hand_left#28196"
+    "krotter.vr_hand_left#28196",
+    "krotter.vr_hand_right#28197"
   ],
   "__version": 1
 }
