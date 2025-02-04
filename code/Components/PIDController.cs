@@ -35,10 +35,10 @@ public class PIDController : Component
 	public float PosKd { get; set; } = 120;
 
 	[Property]
-	public float RotKp { get; set; } = 60000;
+	public float RotKp { get; set; } = 600;
 
 	[Property]
-	public float RotKd { get; set; } = 6000;
+	public float RotKd { get; set; } = 240;
 
 	private Vector3 prevRotError = Vector3.Zero;
 	private Vector3 posI = Vector3.Zero;
@@ -92,9 +92,11 @@ public class PIDController : Component
 	private Vector3 RotationPD( in Rotation currentRotation, in Rotation targetRotation )
 	{
 		Rotation rot = targetRotation * currentRotation.Inverse;
-		Vector3 p = new Vector3( rot.x, rot.y, rot.z ) * rot.w * Time.Delta;
+		// = rot.Angles().AsVector3();
+		Vector3 p = new Vector3( rot.x, rot.y, rot.z ) * rot.w;
+		p.ClampLength(9);
 		Vector3 d = (p - prevRotError) / Time.Delta;
-		prevRotError = p;
+		prevRotError = p.ClampLength(5);
 		return p * RotKp + d * RotKd;
 	}
 }

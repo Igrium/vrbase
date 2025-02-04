@@ -335,8 +335,8 @@
             "PosKi": 0,
             "PosKp": 300,
             "Rigidbody": null,
-            "RotKd": 6000,
-            "RotKp": 60000,
+            "RotKd": 240,
+            "RotKp": 600,
             "Target": null
           }
         ]
@@ -459,8 +459,8 @@
             "PosKi": 0,
             "PosKp": 300,
             "Rigidbody": null,
-            "RotKd": 6000,
-            "RotKp": 60000,
+            "RotKd": 240,
+            "RotKp": 600,
             "Target": null
           }
         ]
