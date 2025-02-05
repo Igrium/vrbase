@@ -57,6 +57,10 @@ public partial class VRPlayerController : Component
 	[Category("Movement")]
 	public float TerminalVelocity { get; set; } = -1;
 
+	[Property]
+	[Category("Movement")]
+	public float SnapRotateIncrements { get; set; } = 30f;
+
 
 	/// <summary>
 	/// The height of the HMD off the ground.
@@ -139,14 +143,30 @@ public partial class VRPlayerController : Component
 		IsMoving = false;
 
 		Vector3 input;
+		float rotAmount = 0;
 		if ( Game.IsRunningInVR )
 		{
 			input = new Vector3( Input.VR.LeftHand.Joystick.Value, 0 );
+			rotAmount = DoSnapturn();
 		}
 		else
 		{
 			input = Input.AnalogMove;
+			if ( Input.Pressed( "TurnLeft" ) )
+			{
+				rotAmount -= SnapRotateIncrements;
+			}
+			if ( Input.Pressed( "TurnRight" ) )
+			{
+				rotAmount += SnapRotateIncrements;
+			}
 		}
+
+		if ( rotAmount != 0 )
+		{
+			Transform.World = Transform.World.RotateAround( WorldFeetPos, Rotation.FromYaw( rotAmount ) );
+		}
+
 		//Vector3 input = 
 		// WALKING
 		if ( input.Length >= .1 )
@@ -213,6 +233,30 @@ public partial class VRPlayerController : Component
 		}
 	}
 
+	bool CanSnap = true;
+
+	private float DoSnapturn()
+	{
+		float val = 0;
+		if (CanSnap)
+		{
+			if ( Input.VR.RightHand.Joystick.Value.x > 0.5f)
+			{
+				val = -SnapRotateIncrements;
+				CanSnap = false;
+			}
+			else if (Input.VR.RightHand.Joystick.Value.x < -0.5f)
+			{
+				val = SnapRotateIncrements;
+				CanSnap = false;
+			}
+		}
+		else if (Input.VR.RightHand.Joystick.Value.Length < 0.5f)
+		{
+			CanSnap = true;
+		}
+		return val;
+	}
 
 	protected override void OnUpdate()
 	{

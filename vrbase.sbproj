@@ -35,6 +35,11 @@
       "AssemblyReferences": [],
       "IgnoreFolders": [],
       "DistinctAssemblyReferences": []
+    },
+    "ControlModes": {
+      "Keyboard": true,
+      "VR": true,
+      "Gamepad": false
     }
   }
 }
