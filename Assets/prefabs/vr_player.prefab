@@ -35,6 +35,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "Radius": 8,
+        "SnapRotateIncrements": 30,
         "StepHeight": 18,
         "SuffocationIgnores": "",
         "SuffocationMesh": {
@@ -338,6 +339,18 @@
             "RotKd": 240,
             "RotKp": 600,
             "Target": null
+          },
+          {
+            "__type": "VRBase.Vrpickup",
+            "__guid": "c7d96a35-721c-4c1e-801c-624cd4ac6484",
+            "gripAmount": 0.7,
+            "leftHand": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
           }
         ]
       },
