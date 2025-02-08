@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Sandbox;
+using Sandbox.Diagnostics;
 
 namespace VRBase;
 
@@ -12,10 +13,20 @@ public sealed class Vrpickup : Component
 	[Property]
 	public float gripAmount = 0.7f;
 
+	[Property]
+	private Vector3 grabZoneCenter;
+
+	[Property]
+	public float grabZonePickupRadius = 1;
+
 	private Boolean grabIsPressed = false;
+	private Logger log = new Logger("VRpickup: ");
 
 	protected override void OnUpdate()
 	{
+		//a visualizer for the sphere, except this method crashes s&bbox every time...
+		//DebugOverlay.Sphere(new Sphere(getGrabZoneCenter(), grabZonePickupRadius));
+
 		if(Game.IsRunningInVR)
 		{
 			float currentGripValue;
@@ -57,9 +68,24 @@ public sealed class Vrpickup : Component
 		}
 	}
 
+	public Vector3 getGrabZoneCenter()
+	{
+		return this.WorldPosition+getGrabZoneCenter();
+	}
+
 	public void onGrabPressed()
 	{
-		
+		SceneTrace trace = Scene.Trace.Sphere(grabZonePickupRadius, grabZoneCenter, grabZoneCenter);
+		foreach(SceneTraceResult result in trace.RunAll())
+		{
+			log.Info("AGGsGG: " + result.Body.GetGameObject().Name);
+			Pickupable pickup = result.Body.GetGameObject().GetComponent<Pickupable>();
+			if(pickup != null)
+			{
+				pickup.GameObject.AddComponent<PIDController>();
+				break;
+			}
+		}
 	}
 
 	public void onGrabReleased()

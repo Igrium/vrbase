@@ -343,6 +343,8 @@
           {
             "__type": "VRBase.Vrpickup",
             "__guid": "c7d96a35-721c-4c1e-801c-624cd4ac6484",
+            "grabZoneCenter": "1,0,0",
+            "grabZonePickupRadius": 1,
             "gripAmount": 0.7,
             "leftHand": true,
             "OnComponentDestroy": null,
