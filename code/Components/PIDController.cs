@@ -14,6 +14,10 @@ public class PIDController : Component
 	[Property]
 	public GameObject? Target { get; set; }
 
+	//if the target is unset, then use this rotation and position instead
+	public Vector3 targetPos {get; set;}
+	public Rotation targetRot {get; set;}
+
 	/// <summary>
 	/// The rigid body that will follow it.
 	/// </summary>
@@ -67,12 +71,20 @@ public class PIDController : Component
 		PhysicsBody? body = PhysicsBody;
 		GameObject? target = Target;
 
-		if ( body.IsValid() && target.IsValid() )
+		Vector3 targetPos = this.targetPos;
+		Rotation targetRot = this.targetRot;
+		if(target.IsValid())
 		{
-			Vector3 force = PositionPID( body.Position, target.WorldPosition );
+			targetPos = target.WorldPosition;
+			targetRot = target.WorldRotation;
+		}
+
+		if ( body.IsValid() )
+		{
+			Vector3 force = PositionPID( body.Position, targetPos );
 			body.ApplyForce( force );
 
-			Vector3 torque = RotationPD( body.Rotation, target.WorldRotation );
+			Vector3 torque = RotationPD( body.Rotation, targetRot );
 			body.ApplyTorque( torque );
 		}
 	}

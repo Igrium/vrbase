@@ -20,6 +20,8 @@ public sealed class Vrpickup : Component
 	public float grabZonePickupRadius = 1;
 
 	private Boolean grabIsPressed = false;
+
+	private Pickupable? heldObject;
 	private Logger log = new Logger("VRpickup: ");
 
 	protected override void OnUpdate()
@@ -70,19 +72,27 @@ public sealed class Vrpickup : Component
 
 	public Vector3 getGrabZoneCenter()
 	{
-		return this.WorldPosition+getGrabZoneCenter();
+		return this.WorldTransform.PointToWorld(grabZoneCenter);
+	}
+
+	public void setHeldObject(Pickupable? pickup)
+	{
+		if(heldObject.IsValid())
+		{
+			heldObject.drop(this);
+		}
+		heldObject = pickup;
 	}
 
 	public void onGrabPressed()
 	{
-		SceneTrace trace = Scene.Trace.Sphere(grabZonePickupRadius, grabZoneCenter, grabZoneCenter);
+		SceneTrace trace = Scene.Trace.Sphere(grabZonePickupRadius, getGrabZoneCenter(), getGrabZoneCenter());
 		foreach(SceneTraceResult result in trace.RunAll())
 		{
-			log.Info("AGGsGG: " + result.Body.GetGameObject().Name);
 			Pickupable pickup = result.Body.GetGameObject().GetComponent<Pickupable>();
 			if(pickup != null)
 			{
-				pickup.GameObject.AddComponent<PIDController>();
+				setHeldObject(pickup.pickup(this));
 				break;
 			}
 		}
@@ -90,6 +100,6 @@ public sealed class Vrpickup : Component
 
 	public void onGrabReleased()
 	{
-
+		setHeldObject(null);
 	}
 }
