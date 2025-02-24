@@ -86,7 +86,7 @@ public sealed class Pickupable : Component
 		{
 			handsHolding.Add(hand);
 			//this is temporary, make it actually use an algoritim to get these positions
-			return new PickupData(this, hand.WorldPosition, hand.WorldRotation);
+			return new PickupData(this, Vector3.Zero, Rotation.Identity);
 		}
 		return null;
 	}
