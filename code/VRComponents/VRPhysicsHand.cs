@@ -1,4 +1,5 @@
-﻿namespace VRBase;
+﻿using VRBase.Util;
+namespace VRBase;
 
 [Title("VR Physics Hand")]
 public sealed class VRPhysicsHand : Component
@@ -9,32 +10,32 @@ public sealed class VRPhysicsHand : Component
 	public Rigidbody Rigidbody => GetOrAddComponent<Rigidbody>();
 
 	public VRPlayerController? Player => GameObject.GetComponentInParent<VRPlayerController?>();
-
-	public PIDController PDController => GetOrAddComponent<PIDController>();
-
+	
+	private bool _doPhysUpdate;
+	
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
+	}
 
-		var player = Player;
-		var pdController = PDController;
-
-		if (player.IsValid() && player.IsMoving)
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
+		var body = Rigidbody;
+		var trackingHand = TrackingHand;
+		if ( trackingHand == null )
+			return;
+		if ( Player.IsValid() && Player.IsMoving )
 		{
-			pdController.Enabled = false;
-			if (TrackingHand.IsValid()) {
-				Rigidbody.WorldPosition = GetProjectedTransform();
-				Rigidbody.WorldRotation = TrackingHand.WorldRotation;
-			}
-
-			Rigidbody.Velocity = Vector3.Zero;
-			Rigidbody.AngularVelocity = Vector3.Zero;
+			Rigidbody.WorldPosition = GetProjectedTransform();
+			Rigidbody.WorldRotation = trackingHand.WorldRotation;
+			body.Velocity = Vector3.Zero;
+			body.AngularVelocity = Vector3.Zero;
 		}
 		else
 		{
-			pdController.Enabled = true;
-			pdController.Target = TrackingHand;
-			pdController.Rigidbody = Rigidbody;
+			body.Velocity = PController.GetPosVelocity( body.WorldPosition, trackingHand.WorldPosition, 3000 );
+			body.AngularVelocity = PController.GetRotVelocity( body.WorldRotation, trackingHand.WorldRotation, 20 );
 		}
 	}
 

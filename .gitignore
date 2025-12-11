@@ -26,3 +26,5 @@ code/Properties/*
 
 # Exported / standalone games
 Exports/
+
+*.DotSettings.user

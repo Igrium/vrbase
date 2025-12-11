@@ -1,14 +1,24 @@
 {
   "RootObject": {
     "__guid": "f21432e9-5303-49d3-810f-693fd0fe191a",
+    "__version": 1,
     "Flags": 0,
     "Name": "vr_player",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
     "Enabled": true,
     "NetworkMode": 1,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
     "Components": [
       {
         "__type": "Sandbox.VR.VRAnchor",
         "__guid": "86de344f-ad15-4758-8e86-14fed69bd88c",
+        "__enabled": true,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -19,6 +29,7 @@
       {
         "__type": "VRBase.VRPlayerController",
         "__guid": "fcadc389-47b6-41cf-9bfb-e51bbdb00d01",
+        "__enabled": true,
         "EnableSuffocation": true,
         "FallAcceleration": 385.827,
         "GroundAngle": 45,
@@ -49,14 +60,24 @@
     "Children": [
       {
         "__guid": "b1d71e23-ddea-42a9-8ad7-ae673520495e",
+        "__version": 1,
         "Flags": 0,
         "Name": "Head",
         "Position": "0,0,2.434182",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "Sandbox.VR.VRTrackedObject",
             "__guid": "ba47a5e4-e7c0-4771-a271-c0b66c68dcbb",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -70,9 +91,12 @@
           {
             "__type": "Sandbox.CameraComponent",
             "__guid": "3ea98390-cdb2-4267-973d-2775b3ba68ee",
+            "__enabled": true,
             "BackgroundColor": "0.33333,0.46275,0.52157,1",
             "ClearFlags": "All",
+            "EnablePostProcessing": true,
             "FieldOfView": 60,
+            "FovAxis": "Horizontal",
             "IsMainCamera": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -82,22 +106,33 @@
             "OnComponentUpdate": null,
             "Orthographic": false,
             "OrthographicHeight": 1204,
+            "PostProcessAnchor": null,
             "Priority": 1,
             "RenderExcludeTags": "",
             "RenderTags": "",
+            "RenderTexture": null,
             "TargetEye": "Both",
             "Viewport": "0,0,1,1",
             "ZFar": 5000,
-            "ZNear": 2
+            "ZNear": 1
           }
         ],
         "Children": [
           {
             "__guid": "f4469774-8366-4f54-9b6e-59ab625950a6",
+            "__version": 1,
             "Flags": 0,
             "Name": "SuffocationMesh",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
             "Components": [
               {
                 "__type": "Sandbox.ModelRenderer",
@@ -105,8 +140,10 @@
                 "__enabled": false,
                 "BodyGroups": 18446744073709551615,
                 "CreateAttachments": false,
+                "LodOverride": null,
                 "MaterialGroup": null,
                 "MaterialOverride": null,
+                "Materials": null,
                 "Model": "models/suffocation_mesh.vmdl",
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
@@ -126,6 +163,7 @@
               {
                 "__type": "VRBase.SuffocationMesh",
                 "__guid": "d1aeb866-b06a-4131-9473-de47f9f600ee",
+                "__enabled": true,
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
                 "OnComponentEnabled": null,
@@ -133,19 +171,31 @@
                 "OnComponentStart": null,
                 "OnComponentUpdate": null
               }
-            ]
+            ],
+            "Children": []
           }
         ]
       },
       {
         "__guid": "c20f2009-23ae-4b6d-9030-4880130b0523",
+        "__version": 1,
         "Flags": 0,
         "Name": "LeftHand",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "Sandbox.VR.VRTrackedObject",
             "__guid": "4b99d4ae-a722-4b57-9098-d3ad8057eeff",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -165,8 +215,10 @@
             "BoneMergeTarget": null,
             "CreateAttachments": false,
             "CreateBoneObjects": false,
+            "LodOverride": null,
             "MaterialGroup": null,
             "MaterialOverride": "materials/dev/transparent_hand.vmat",
+            "Materials": null,
             "Model": "models/vr_hand_left.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
@@ -182,6 +234,7 @@
               "vectors": {},
               "rotations": {}
             },
+            "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
               "OverlayLayer": false,
@@ -190,22 +243,36 @@
             },
             "RenderType": "On",
             "Sequence": {
-              "Name": null
+              "Name": null,
+              "Looping": true,
+              "Blending": false
             },
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
           }
-        ]
+        ],
+        "Children": []
       },
       {
         "__guid": "4ac89704-18c2-4f65-9a2a-9df311198261",
+        "__version": 1,
         "Flags": 0,
         "Name": "RightHand",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "Sandbox.VR.VRTrackedObject",
             "__guid": "331b00cb-5d60-4dd6-b260-f5d0108d3355",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -216,17 +283,29 @@
             "TrackingType": "All",
             "UseRelativeTransform": false
           }
-        ]
+        ],
+        "Children": []
       },
       {
         "__guid": "a4390b44-2b71-4f25-a9d2-44f140d7e0b1",
+        "__version": 1,
         "Flags": 0,
         "Name": "LeftPhysicsHand",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "VRBase.VRPhysicsHand",
             "__guid": "2c0fcd4b-a5fe-4215-bc5b-4e3b405f5615",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -241,13 +320,16 @@
           {
             "__type": "Sandbox.SkinnedModelRenderer",
             "__guid": "66cd4064-c039-45ce-8405-eb5ae427c112",
+            "__enabled": true,
             "AnimationGraph": null,
             "BodyGroups": 18446744073709551615,
             "BoneMergeTarget": null,
             "CreateAttachments": false,
             "CreateBoneObjects": false,
+            "LodOverride": null,
             "MaterialGroup": null,
             "MaterialOverride": null,
+            "Materials": null,
             "Model": "models/vr_hand_left.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
@@ -263,6 +345,7 @@
               "vectors": {},
               "rotations": {}
             },
+            "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
               "OverlayLayer": false,
@@ -271,7 +354,9 @@
             },
             "RenderType": "On",
             "Sequence": {
-              "Name": null
+              "Name": null,
+              "Looping": true,
+              "Blending": false
             },
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
@@ -279,6 +364,9 @@
           {
             "__type": "Sandbox.ModelCollider",
             "__guid": "9a906597-a455-4c14-a784-d58592f627d0",
+            "__enabled": true,
+            "ColliderFlags": 0,
+            "Elasticity": null,
             "Friction": null,
             "IsTrigger": false,
             "Model": "models/vr_hand_left.vmdl",
@@ -292,6 +380,7 @@
             "OnObjectTriggerExit": null,
             "OnTriggerEnter": null,
             "OnTriggerExit": null,
+            "RollingResistance": null,
             "Static": false,
             "Surface": null,
             "SurfaceVelocity": "0,0,0"
@@ -299,8 +388,12 @@
           {
             "__type": "Sandbox.Rigidbody",
             "__guid": "6d3026df-7461-4709-9b6d-28ead14d998d",
+            "__enabled": true,
             "AngularDamping": 0,
+            "EnableImpactDamage": true,
             "Gravity": false,
+            "GravityScale": 1,
+            "ImpactDamage": 0,
             "LinearDamping": 0,
             "Locking": {
               "X": false,
@@ -312,6 +405,7 @@
             },
             "MassCenterOverride": "0,0,0",
             "MassOverride": 1,
+            "MinImpactDamageSpeed": 500,
             "MotionEnabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -324,25 +418,9 @@
             "StartAsleep": false
           },
           {
-            "__type": "VRBase.PIDController",
-            "__guid": "3f5c0b77-609d-484c-ad20-ae99b00156ad",
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "PosKd": 120,
-            "PosKi": 0,
-            "PosKp": 300,
-            "Rigidbody": null,
-            "RotKd": 240,
-            "RotKp": 600,
-            "Target": null
-          },
-          {
             "__type": "VRBase.Vrpickup",
             "__guid": "c7d96a35-721c-4c1e-801c-624cd4ac6484",
+            "__enabled": true,
             "grabZoneCenter": "6,0,0",
             "grabZonePickupRadius": 6,
             "gripAmount": 0.7,
@@ -354,17 +432,29 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null
           }
-        ]
+        ],
+        "Children": []
       },
       {
         "__guid": "e5aaa907-cdfc-4491-9e35-7a37b02e764e",
+        "__version": 1,
         "Flags": 0,
         "Name": "RightPhysicsHand",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "VRBase.VRPhysicsHand",
             "__guid": "d54ff63e-a4cd-420d-b8f6-40e48772cf97",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -379,13 +469,16 @@
           {
             "__type": "Sandbox.SkinnedModelRenderer",
             "__guid": "c66c4c45-67d0-4c31-b9d5-58b5acc8bdc2",
+            "__enabled": true,
             "AnimationGraph": null,
             "BodyGroups": 18446744073709551615,
             "BoneMergeTarget": null,
             "CreateAttachments": false,
             "CreateBoneObjects": false,
+            "LodOverride": null,
             "MaterialGroup": null,
             "MaterialOverride": null,
+            "Materials": null,
             "Model": "models/vr_hand_right.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
@@ -401,6 +494,7 @@
               "vectors": {},
               "rotations": {}
             },
+            "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
               "OverlayLayer": false,
@@ -409,7 +503,9 @@
             },
             "RenderType": "On",
             "Sequence": {
-              "Name": null
+              "Name": null,
+              "Looping": true,
+              "Blending": false
             },
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
@@ -417,6 +513,9 @@
           {
             "__type": "Sandbox.ModelCollider",
             "__guid": "b362b997-394c-49e0-9bb2-4c3a431a543e",
+            "__enabled": true,
+            "ColliderFlags": 0,
+            "Elasticity": null,
             "Friction": null,
             "IsTrigger": false,
             "Model": "models/vr_hand_right.vmdl",
@@ -430,6 +529,7 @@
             "OnObjectTriggerExit": null,
             "OnTriggerEnter": null,
             "OnTriggerExit": null,
+            "RollingResistance": null,
             "Static": false,
             "Surface": null,
             "SurfaceVelocity": "0,0,0"
@@ -437,8 +537,12 @@
           {
             "__type": "Sandbox.Rigidbody",
             "__guid": "0a8fba65-816a-4d8d-920f-dfff573f9f88",
+            "__enabled": true,
             "AngularDamping": 0,
+            "EnableImpactDamage": true,
             "Gravity": false,
+            "GravityScale": 1,
+            "ImpactDamage": 0,
             "LinearDamping": 0,
             "Locking": {
               "X": false,
@@ -450,6 +554,7 @@
             },
             "MassCenterOverride": "0,0,0",
             "MassOverride": 1,
+            "MinImpactDamageSpeed": 500,
             "MotionEnabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -460,37 +565,15 @@
             "OverrideMassCenter": false,
             "RigidbodyFlags": 0,
             "StartAsleep": false
-          },
-          {
-            "__type": "VRBase.PIDController",
-            "__guid": "36f4a08b-62da-4f48-81b9-c6cf54cfe91c",
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "PosKd": 120,
-            "PosKi": 0,
-            "PosKp": 300,
-            "Rigidbody": null,
-            "RotKd": 240,
-            "RotKp": 600,
-            "Target": null
           }
-        ]
+        ],
+        "Children": []
       }
     ],
-    "__variables": [],
     "__properties": {
-      "FixedUpdateFrequency": 50,
-      "MaxFixedUpdates": 5,
-      "NetworkFrequency": 30,
       "NetworkInterpolation": true,
-      "PhysicsSubSteps": 1,
-      "ThreadedAnimation": true,
       "TimeScale": 1,
-      "UseFixedUpdate": true,
+      "WantsSystemScene": true,
       "Metadata": {},
       "NavMesh": {
         "Enabled": false,
@@ -504,16 +587,17 @@
         "ExcludedBodies": "",
         "IncludedBodies": ""
       }
-    }
+    },
+    "__variables": []
   },
+  "ResourceVersion": 2,
   "ShowInMenu": false,
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "ResourceVersion": 1,
   "__references": [
     "krotter.vr_hand_left#28196",
     "krotter.vr_hand_right#28197"
   ],
-  "__version": 1
+  "__version": 2
 }
