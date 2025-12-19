@@ -14,8 +14,8 @@ namespace VRBase;
 public partial class VRPlayerController : Component
 {
 
-	[ConVar("r_vr_debug_gismos")]
-	public static bool VRDebugGismos { get; set; } = false;
+	[ConVar("r_vr_debug_gizmos")]
+	public static bool VrDebugGizmos { get; set; } = false;
 
 	/// <summary>
 	/// The gameobject being tracked to the player's HMD. Should be a direct child of this gameobject.
@@ -267,7 +267,7 @@ public partial class VRPlayerController : Component
 			TickSuffocation();
 		}
 
-		if ( VRDebugGismos )
+		if ( VrDebugGizmos )
 		{
 			DrawDebugGizmos();
 		}
