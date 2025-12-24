@@ -489,6 +489,14 @@
             },
             "Property": "Position",
             "Value": "-88.58203,13.88062,3.753266"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "91c8285c-eb3c-43eb-9df6-d1fd2daa783e"
+            },
+            "Property": "StepHeight",
+            "Value": 24
           }
         ],
         "MovedObjects": []

@@ -1,3 +1,4 @@
+using System;
 namespace VRBase.Util;
 
 /// <summary>
@@ -6,18 +7,27 @@ namespace VRBase.Util;
 [Title( "VR Teleporter" )]
 public class VRTeleporter : Component
 {
+	public enum EndCondition
+	{
+		Success,
+		Blocked,
+		Fell,
+		Edge,
+		MaxDist
+	}
+
 	public record struct TeleportResult
 	{
 		public Vector3 EndPos;
-		public bool Completed;
+		public EndCondition EndCondition;
 	}
 
 	[ConVar( "r_teleport_debug" )]
 	public static bool DrawTeleportDebug { get; set; }
 
-	[Property, Title("Use Project Collision Rules")]
+	[Property, Title( "Use Project Collision Rules" )]
 	public bool UseCollisionRules { get; set; }
-	
+
 	[Property]
 	[HideIf( nameof( UseCollisionRules ), true )]
 	public TagSet IgnoreLayers { get; set; } = new TagSet();
@@ -41,7 +51,15 @@ public class VRTeleporter : Component
 	public float StandHeight = 73f;
 
 	/// <summary>
+	/// The height at which the player can step up
+	/// Cheaper than mantling, but easier to abuse.
+	/// </summary>
+	[Property, Category( "Movement" )]
+	public float StepHeight { get; set; } = 24f;
+
+	/// <summary>
 	/// The vertical distance the player can climb up
+	/// More expensive than stepping but more checks to make sure the spot is accessible
 	/// </summary>
 	[Property, Category( "Movement" )]
 	public float MantleHeight { get; set; } = 48f;
@@ -55,9 +73,9 @@ public class VRTeleporter : Component
 	[Property, Category( "Movement" )]
 	public float LeapDistance { get; set; } = 96f;
 
-	[Property, Category("Advanced")]
+	[Property, Category( "Advanced" )]
 	public float RaycastInterval { get; set; } = 16;
-	
+
 	[Property, Category( "Advanced" )]
 	public float SidestepDistance { get; set; } = 64;
 
@@ -65,56 +83,90 @@ public class VRTeleporter : Component
 	{
 		return TryTeleport( WorldPosition, targetPos );
 	}
-	
+
+	private const float MaxIterations = 4096f;
+
 	public TeleportResult TryTeleport( in Vector3 startPos, in Vector3 targetPos, float maxDist = 1024f )
 	{
 		Vector3 currentPos = startPos;
 		Vector3 wishDir = (targetPos - startPos).WithZ( 0 ).Normal;
-		BBox traceBBox = new BBox( new Vector3( -Radius, -Radius, 0 ), new Vector3( Radius, Radius, 4 ) );
-		
-		while ( currentPos.Distance( in targetPos ) > RaycastInterval * 1.5 )
-		{
-			if ( currentPos.DistanceSquared( targetPos ) > maxDist * maxDist )
-			{
-				return new TeleportResult()
-				{
-					EndPos = currentPos, Completed = false
-				};
-			}
-			
-			Vector3 nextPos = currentPos + wishDir * RaycastInterval;
-			var trace = BuildTrace( nextPos + Vector3.Up * 18f, nextPos + Vector3.Down * MaxDropHeight, traceBBox ).Run();
 
-			bool success = !trace.StartedSolid && trace.Hit;
+		BBox bbox = BBox.FromHeightAndRadius( CrouchHeight, Radius );
+
+		EndCondition endCondition;
+		float endError = RaycastInterval * 1.5f;
+
+		int i = 0;
+		while ( true )
+		{
+			if ( i >= MaxIterations )
+			{
+				throw new InvalidOperationException( "Reached max tp iterations" );
+			}
+
+			if ( currentPos.DistanceSquared( targetPos.WithZ( currentPos.z ) ) < endError * endError )
+			{
+				endCondition = EndCondition.Success;
+				currentPos = targetPos.WithZ( currentPos.z );
+				break;
+			}
+
+			if ( currentPos.DistanceSquared( in startPos ) > maxDist * maxDist )
+			{
+				endCondition = EndCondition.MaxDist;
+				break;
+			}
+
+			// Normal move with step
+			var cond = TryNormalMove( currentPos, currentPos + (wishDir * RaycastInterval), bbox, out currentPos );
+
+			if ( cond != EndCondition.Success )
+			{
+				endCondition = cond;
+				break;
+			}
 
 			if ( DrawTeleportDebug )
 			{
-				DebugOverlay.Box(traceBBox + trace.EndPosition, success ? Color.White : Color.Red, overlay:true);
+				DebugOverlay.Box( BBox.FromHeightAndRadius( 4f, Radius ) + currentPos, Color.White );
 			}
-			
-			if ( !success )
-			{
-				return new TeleportResult()
-				{
-					EndPos = currentPos, Completed = false
-				};
-			}
-			currentPos = trace.EndPosition;
+			i++;
 		}
+
 		if ( DrawTeleportDebug )
 		{
-			DebugOverlay.Box(traceBBox + currentPos, Color.Green, overlay:true);
+			DebugOverlay.Box( bbox + currentPos, endCondition == EndCondition.Success ? Color.Green : Color.Red );
+			Log.Info(endCondition);
 		}
 		return new TeleportResult()
 		{
-			EndPos = currentPos, Completed = true
+			EndPos = currentPos, EndCondition = endCondition
 		};
+	}
+
+	private EndCondition TryNormalMove( Vector3 currentPos, Vector3 nextPos, BBox bbox, out Vector3 outPos )
+	{
+		var trace1 = BuildTrace( currentPos, currentPos + Vector3.Up * StepHeight, bbox ).Run();
+		// Log.Info($"Hit: {trace1.GameObject}, this: {GameObject}");
+		// DebugOverlay.Line( [trace1.StartPosition, trace1.EndPosition], Color.Orange );
+		var trace2 = BuildTrace( trace1.EndPosition, nextPos + Vector3.Up * StepHeight, bbox ).Run();
+		// DebugOverlay.Line( [trace2.StartPosition, trace2.EndPosition], Color.Orange );
+		var trace3 = BuildTrace( trace2.EndPosition, trace2.EndPosition + Vector3.Down * MaxDropHeight, bbox ).Run();
+		// DebugOverlay.Line( [trace3.StartPosition, trace3.EndPosition], Color.Orange );
+		outPos = trace3.EndPosition;
+
+		// If trace2 hit something, it means we weren't able to fully traverse to the next position.
+		if ( !trace3.Hit )
+		{
+			return EndCondition.Fell;
+		}
+		return trace2.Hit ? EndCondition.Blocked : EndCondition.Success;
 	}
 
 	private SceneTrace BuildTrace( in Vector3 from, in Vector3 to, in BBox bbox )
 	{
 		SceneTrace trace = Scene.Trace.Ray( from, to );
-		trace.Size( in bbox ).IgnoreGameObjectHierarchy( this.GameObject );
+		trace = trace.Size( in bbox ).IgnoreGameObjectHierarchy( this.GameObject );
 		return UseCollisionRules ? trace.WithCollisionRules( Tags ) : trace.WithoutTags( IgnoreLayers );
 	}
 }
