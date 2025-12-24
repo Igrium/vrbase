@@ -6,6 +6,8 @@ public class DesktopPlayer : Component
 	[Property, RequireComponent]
 	public VRTeleporter VrTeleporter { get; set; } = null!;
 
+	private Vector3 _teleportDest;
+	
 	protected override void OnUpdate()
 	{
 		if ( !IsProxy && Input.Down( "teleport" ) )
@@ -16,7 +18,11 @@ public class DesktopPlayer : Component
 			
 			DebugOverlay.Sphere(new Sphere(dest, 4));
 
-			VrTeleporter.TryTeleport( GameObject.WorldPosition, dest, 1024f );
+			 _teleportDest = VrTeleporter.TryTeleport( GameObject.WorldPosition, dest, 1024f ).EndPos;
+		}
+		if ( !IsProxy && Input.Released( "teleport" ) )
+		{
+			GameObject.WorldPosition = _teleportDest;
 		}
 		base.OnUpdate();
 	}

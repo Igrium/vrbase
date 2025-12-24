@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 namespace VRBase.Util;
 
 /// <summary>
@@ -107,7 +108,7 @@ public class VRTeleporter : Component
 			if ( currentPos.DistanceSquared( targetPos.WithZ( currentPos.z ) ) < endError * endError )
 			{
 				endCondition = EndCondition.Success;
-				currentPos = targetPos.WithZ( currentPos.z );
+				// currentPos = targetPos.WithZ( currentPos.z );
 				break;
 			}
 
@@ -117,18 +118,34 @@ public class VRTeleporter : Component
 				break;
 			}
 
-			// Normal move with step
-			var cond = TryNormalMove( currentPos, currentPos + (wishDir * RaycastInterval), bbox, out currentPos );
+			var nextPos = currentPos + (wishDir * RaycastInterval);
+			TryMantle( currentPos, nextPos, BBox.FromHeightAndRadius( 4f, Radius ), out _ );
 
-			if ( cond != EndCondition.Success )
+			// Normal move with step
+			var cond = TryNormalMove( currentPos, nextPos, bbox, out var movePos );
+			bool didMantle = false;
+			if ( cond == EndCondition.Success )
 			{
-				endCondition = cond;
-				break;
+				currentPos = movePos;
+			}
+			else
+			{
+				if ( TryMantle( currentPos, nextPos, bbox, out movePos ) 
+					&& movePos.z - targetPos.z < 32 )// Only go through with the mantle if we're aiming above it
+				{
+					didMantle = true;
+					currentPos = movePos;
+				}
+				else
+				{
+					endCondition = cond;
+					break;
+				}
 			}
 
 			if ( DrawTeleportDebug )
 			{
-				DebugOverlay.Box( BBox.FromHeightAndRadius( 4f, Radius ) + currentPos, Color.White );
+				DebugOverlay.Box( BBox.FromHeightAndRadius( 4f, Radius ) + currentPos, didMantle ? Color.Magenta : Color.White );
 			}
 			i++;
 		}
@@ -136,14 +153,12 @@ public class VRTeleporter : Component
 		if ( DrawTeleportDebug )
 		{
 			DebugOverlay.Box( bbox + currentPos, endCondition == EndCondition.Success ? Color.Green : Color.Red );
-			Log.Info(endCondition);
 		}
 		return new TeleportResult()
 		{
 			EndPos = currentPos, EndCondition = endCondition
 		};
 	}
-
 	private EndCondition TryNormalMove( Vector3 currentPos, Vector3 nextPos, BBox bbox, out Vector3 outPos )
 	{
 		var trace1 = BuildTrace( currentPos, currentPos + Vector3.Up * StepHeight, bbox ).Run();
@@ -163,10 +178,39 @@ public class VRTeleporter : Component
 		return trace2.Hit ? EndCondition.Blocked : EndCondition.Success;
 	}
 
-	private SceneTrace BuildTrace( in Vector3 from, in Vector3 to, in BBox bbox )
+	private bool TryMantle( Vector3 currentPos, Vector3 targetPos, BBox bbox, out Vector3 outPos )
 	{
-		SceneTrace trace = Scene.Trace.Ray( from, to );
-		trace = trace.Size( in bbox ).IgnoreGameObjectHierarchy( this.GameObject );
+		Vector3 targetCurrentZ = targetPos.WithZ( currentPos.z );
+		outPos = currentPos;
+		
+		foreach ( var trace in BuildTrace( targetCurrentZ + Vector3.Up * MantleHeight, targetCurrentZ, bbox ).RunAll() )
+		{
+			// Make sure the trace is valid
+			Vector3 hitOffset = trace.HitPosition + Vector3.Up * 1;
+			var trace2 = BuildTrace( currentPos.WithZ( hitOffset.z ), hitOffset, bbox ).Run();
+			if ( !trace2.Hit )
+			{
+				outPos = trace2.EndPosition;
+				return true;
+			}
+
+			// DebugOverlay.Box( bbox + hitOffset, Color.Magenta );
+			// var trace2 = BuildTrace( hitOffset, currentPos.WithZ( hitOffset.z ), bbox ).Run();
+			// if (!trace2.StartedSolid)
+			// DebugOverlay.Box( bbox + trace2.HitPosition, Color.Magenta );
+			// DebugOverlay.Box( bbox + trace2.EndPosition, Color.Orange );
+			// var trace2 = BuildTrace(trace.HitPosition + Vector3.Up * 1, currentPos.WithZ( trace.HitPosition.z + 1 ), bbox ).Run();
+			// if (!trace2.StartedSolid)
+			// 	DebugOverlay.Box(bbox + trace2.HitPosition, Color.Magenta );
+		}
+		return false;
+	}
+
+	private SceneTrace BuildTrace( in Vector3 from, in Vector3 to, in BBox? bbox = null )
+	{
+		SceneTrace trace = Scene.Trace.Ray( from, to ).IgnoreGameObjectHierarchy( this.GameObject );
+		if (bbox.HasValue)
+			trace = trace.Size( bbox.Value );
 		return UseCollisionRules ? trace.WithCollisionRules( Tags ) : trace.WithoutTags( IgnoreLayers );
 	}
 }
