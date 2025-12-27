@@ -130,8 +130,8 @@ public class VRTeleporter : Component
 			}
 			else
 			{
-				if ( TryMantle( currentPos, nextPos, bbox, out movePos ) 
-					&& movePos.z - targetPos.z < 32 )// Only go through with the mantle if we're aiming above it
+				if ( TryMantle( currentPos, nextPos, bbox, out movePos )
+					&& movePos.z - targetPos.z < 32 ) // Only go through with the mantle if we're aiming above it
 				{
 					didMantle = true;
 					currentPos = movePos;
@@ -161,28 +161,41 @@ public class VRTeleporter : Component
 	}
 	private EndCondition TryNormalMove( Vector3 currentPos, Vector3 nextPos, BBox bbox, out Vector3 outPos )
 	{
-		var trace1 = BuildTrace( currentPos, currentPos + Vector3.Up * StepHeight, bbox ).Run();
-		// Log.Info($"Hit: {trace1.GameObject}, this: {GameObject}");
-		// DebugOverlay.Line( [trace1.StartPosition, trace1.EndPosition], Color.Orange );
-		var trace2 = BuildTrace( trace1.EndPosition, nextPos + Vector3.Up * StepHeight, bbox ).Run();
-		// DebugOverlay.Line( [trace2.StartPosition, trace2.EndPosition], Color.Orange );
-		var trace3 = BuildTrace( trace2.EndPosition, trace2.EndPosition + Vector3.Down * MaxDropHeight, bbox ).Run();
-		// DebugOverlay.Line( [trace3.StartPosition, trace3.EndPosition], Color.Orange );
-		outPos = trace3.EndPosition;
+		var dirTrace = BuildTrace( currentPos, nextPos, bbox ).Run();
+		var dirTrace2 = BuildTrace( dirTrace.EndPosition, dirTrace.EndPosition + Vector3.Down * MaxDropHeight, bbox ).Run();
 
-		// If trace2 hit something, it means we weren't able to fully traverse to the next position.
-		if ( !trace3.Hit )
+		var bbox2d = bbox;
+		bbox2d.Maxs.z = bbox2d.Mins.z;
+
+		var stepTrace1 = BuildTrace( currentPos, currentPos + Vector3.Up * StepHeight, bbox ).Run();
+		var stepTrace2 = BuildTrace( stepTrace1.EndPosition, nextPos + Vector3.Up * StepHeight, bbox ).Run();
+		var stepTrace3 = BuildTrace( stepTrace2.EndPosition, stepTrace2.EndPosition + Vector3.Down * MaxDropHeight, bbox ).Run();
+
+		// Take the step trace or the direct trace based on which one got farther.
+		float dirTraceDist = currentPos.DistanceSquared( dirTrace2.EndPosition.WithZ( currentPos.z ) );
+		float stepTraceDist = currentPos.DistanceSquared( stepTrace3.EndPosition.WithZ( currentPos.z ) );
+
+		if ( stepTraceDist > dirTraceDist )
 		{
-			return EndCondition.Fell;
+			outPos = stepTrace3.EndPosition;
+			if ( !stepTrace3.Hit )
+				return EndCondition.Fell;
+			else return stepTrace2.Hit ? EndCondition.Blocked : EndCondition.Success;
 		}
-		return trace2.Hit ? EndCondition.Blocked : EndCondition.Success;
+		else
+		{
+			outPos = dirTrace2.EndPosition;
+			if ( !dirTrace2.Hit )
+				return EndCondition.Fell;
+			else return dirTrace.Hit ? EndCondition.Blocked : EndCondition.Success;
+		}
 	}
 
 	private bool TryMantle( Vector3 currentPos, Vector3 targetPos, BBox bbox, out Vector3 outPos )
 	{
 		Vector3 targetCurrentZ = targetPos.WithZ( currentPos.z );
 		outPos = currentPos;
-		
+
 		foreach ( var trace in BuildTrace( targetCurrentZ + Vector3.Up * MantleHeight, targetCurrentZ, bbox ).RunAll() )
 		{
 			// Make sure the trace is valid
@@ -209,7 +222,7 @@ public class VRTeleporter : Component
 	private SceneTrace BuildTrace( in Vector3 from, in Vector3 to, in BBox? bbox = null )
 	{
 		SceneTrace trace = Scene.Trace.Ray( from, to ).IgnoreGameObjectHierarchy( this.GameObject );
-		if (bbox.HasValue)
+		if ( bbox.HasValue )
 			trace = trace.Size( bbox.Value );
 		return UseCollisionRules ? trace.WithCollisionRules( Tags ) : trace.WithoutTags( IgnoreLayers );
 	}
