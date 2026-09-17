@@ -90,9 +90,11 @@ public class VRTeleporter : Component
 	public TeleportResult TryTeleport( in Vector3 startPos, in Vector3 targetPos, float maxDist = 1024f )
 	{
 		Vector3 currentPos = startPos;
+		Vector3 lastStandPos = startPos;
 		Vector3 wishDir = (targetPos - startPos).WithZ( 0 ).Normal;
 
 		BBox bbox = BBox.FromHeightAndRadius( CrouchHeight, Radius );
+		BBox standBbox = BBox.FromHeightAndRadius( StandHeight, Radius );
 
 		EndCondition endCondition;
 		float endError = RaycastInterval * 1.5f;
@@ -107,8 +109,16 @@ public class VRTeleporter : Component
 
 			if ( currentPos.DistanceSquared( targetPos.WithZ( currentPos.z ) ) < endError * endError )
 			{
-				endCondition = EndCondition.Success;
-				// currentPos = targetPos.WithZ( currentPos.z );
+				if ( HasStandClearance( currentPos, standBbox ) )
+				{
+					endCondition = EndCondition.Success;
+				}
+				else
+				{
+                    // Revert to last available standing position if we can't stand here
+					currentPos = lastStandPos;
+					endCondition = EndCondition.Blocked;
+				}
 				break;
 			}
 
@@ -141,6 +151,11 @@ public class VRTeleporter : Component
 					endCondition = cond;
 					break;
 				}
+			}
+
+			if ( HasStandClearance( currentPos, standBbox ) )
+			{
+				lastStandPos = currentPos;
 			}
 
 			if ( DrawTeleportDebug )
@@ -217,6 +232,11 @@ public class VRTeleporter : Component
 			// 	DebugOverlay.Box(bbox + trace2.HitPosition, Color.Magenta );
 		}
 		return false;
+	}
+
+	private bool HasStandClearance( in Vector3 pos, in BBox standBbox )
+	{
+		return !BuildTrace( pos, pos, standBbox ).Run().StartedSolid;
 	}
 
 	private SceneTrace BuildTrace( in Vector3 from, in Vector3 to, in BBox? bbox = null )
