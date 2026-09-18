@@ -28,3 +28,5 @@ code/Properties/*
 Exports/
 
 *.DotSettings.user
+
+dev/
