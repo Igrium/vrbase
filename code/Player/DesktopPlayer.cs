@@ -1,3 +1,4 @@
+using System.Linq;
 using VRBase.Util;
 namespace VRBase.Player;
 
@@ -25,5 +26,30 @@ public class DesktopPlayer : Component
 			GameObject.WorldPosition = _teleportDest;
 		}
 		base.OnUpdate();
+	}
+
+	private void ToggleNoclip()
+	{
+		var noclip = GetComponent<NoclipMoveMode>( true );
+		if ( noclip is null )
+		{
+			Log.Warning( $"{GameObject.Name} has no {nameof( NoclipMoveMode )} component." );
+			return;
+		}
+
+		noclip.Enabled = !noclip.Enabled;
+	}
+
+	[ConCmd( "noclip" )]
+	public static void Noclip()
+	{
+		var player = Game.ActiveScene?.GetAllComponents<DesktopPlayer>().FirstOrDefault( p => !p.IsProxy );
+		if ( player is null )
+		{
+			Log.Warning( "No local player found to toggle noclip on." );
+			return;
+		}
+
+		player.ToggleNoclip();
 	}
 }

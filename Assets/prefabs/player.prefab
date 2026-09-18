@@ -178,6 +178,19 @@
             "Speed": 1
           },
           {
+            "__type": "VRBase.Player.NoclipMoveMode",
+            "__guid": "2f6b6b3e-8f0a-4a3a-9c1e-6d0a3b7c9e21",
+            "__enabled": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RunSpeed": 600,
+            "WalkSpeed": 200
+          },
+          {
             "__type": "VRBase.Util.VRTeleporter",
             "__guid": "91c8285c-eb3c-43eb-9df6-d1fd2daa783e",
             "__enabled": true,
